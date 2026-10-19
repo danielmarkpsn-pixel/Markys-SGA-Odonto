@@ -170,6 +170,8 @@ try {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "consultorio.html")); $type = "text/html; charset=utf-8"
       } elseif ($path -eq "/logo-favmed.png" -and (Test-Path (Join-Path $Root "logo-favmed.png"))) {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "logo-favmed.png")); $type = "image/png"
+      } elseif ($path -eq "/chamador.mp3" -and (Test-Path (Join-Path $Root "chamador.mp3"))) {
+        $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "chamador.mp3")); $type = "audio/mpeg"
       } elseif ($path -eq "/sala-espera") {
         $status = "302 Found"; $type = "text/plain; charset=utf-8"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes("Abra /?painel=1")
       } elseif ($path -eq "/favicon.ico") {

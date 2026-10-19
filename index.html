@@ -26,7 +26,7 @@ main{max-width:1400px;margin:auto;padding:26px clamp(14px,3vw,32px) 40px}.hero{d
 </header>
 <main>
  <section class="hero"><div><div class="eyebrow">Painel de atendimento</div><h2>Fila de espera</h2></div><div class="hero-actions"><button class="btn primary" id="openDisplay" type="button">▣ Abrir tela da sala de espera</button><a class="btn secondary" href="/consultorio" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-block">Painel do profissional</a></div></section>
- <section class="public-screen" id="publicScreen"><div class="screen-label">CLÍNICA FAVMED · CHAMADAS</div><div class="screen-audio"><span id="publicVoiceStatus" role="status">Clique em “Ativar áudio da sala” para habilitar as chamadas neste computador.</span><button class="btn primary" id="enablePublicVoice" type="button">🔊 Ativar áudio da sala</button></div><div class="public-split"><div class="call-board"><div class="called-display" id="calledDisplay"></div><div class="public-queue"><div class="screen-label">PRÓXIMOS NA FILA</div><div id="publicQueueList" class="public-queue-list"></div></div></div><aside class="media-panel browser-panel"><h3 class="media-title">▣ ÁREA DE VÍDEO DA SALA</h3><form id="browserForm" class="browser-controls"><input id="browserUrl" type="url" inputmode="url" autocomplete="url" placeholder="https://site.com.br" aria-label="Endereço do site" /><button class="btn secondary" type="submit">Abrir</button></form><div class="browser-actions"><button class="btn secondary" id="browserBack" type="button" aria-label="Voltar">←</button><button class="btn secondary" id="browserForward" type="button" aria-label="Avançar">→</button><button class="btn secondary" id="browserReload" type="button" aria-label="Atualizar">↻</button><button class="btn secondary" id="browserHome" type="button">Início</button><button class="btn secondary" id="browserFullscreen" type="button">Tela cheia</button></div><p class="media-help" id="browserHint">Esta área é independente da recepção. O espelhamento direto do Windows precisa ser iniciado no próprio Windows (Windows + K); uma página web não consegue receber o espelhamento do sistema. Você também pode abrir aqui um endereço de vídeo compatível com incorporação.</p><div id="youtubePlayer" class="media-frame browser-frame" style="display:none" aria-label="Reprodutor oficial do YouTube"></div><iframe id="browserFrame" class="media-frame browser-frame" title="Navegador da sala de espera" src="about:blank" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></aside></div><div class="screen-footer">Aguarde o anúncio por voz e dirija-se à sala indicada.</div></section>
+ <section class="public-screen" id="publicScreen"><div class="screen-label">CLÍNICA FAVMED · CHAMADAS</div><div class="screen-audio"><span id="publicVoiceStatus" role="status">Sinal sonoro de chamada ativo. A tela da sala não anuncia nomes por voz.</span></div><div class="public-split"><div class="call-board"><div class="called-display" id="calledDisplay"></div><div class="public-queue"><div class="screen-label">PRÓXIMOS NA FILA</div><div id="publicQueueList" class="public-queue-list"></div></div></div><aside class="media-panel browser-panel"><h3 class="media-title">▣ ÁREA DE VÍDEO DA SALA</h3><form id="browserForm" class="browser-controls"><input id="browserUrl" type="url" inputmode="url" autocomplete="url" placeholder="https://site.com.br" aria-label="Endereço do site" /><button class="btn secondary" type="submit">Abrir</button></form><div class="browser-actions"><button class="btn secondary" id="browserBack" type="button" aria-label="Voltar">←</button><button class="btn secondary" id="browserForward" type="button" aria-label="Avançar">→</button><button class="btn secondary" id="browserReload" type="button" aria-label="Atualizar">↻</button><button class="btn secondary" id="browserHome" type="button">Início</button><button class="btn secondary" id="browserFullscreen" type="button">Tela cheia</button></div><p class="media-help" id="browserHint">Esta área é independente da recepção. O espelhamento direto do Windows precisa ser iniciado no próprio Windows (Windows + K); uma página web não consegue receber o espelhamento do sistema. Você também pode abrir aqui um endereço de vídeo compatível com incorporação.</p><div id="youtubePlayer" class="media-frame browser-frame" style="display:none" aria-label="Reprodutor oficial do YouTube"></div><iframe id="browserFrame" class="media-frame browser-frame" title="Navegador da sala de espera" src="about:blank" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></aside></div><div class="screen-footer">Aguarde o anúncio por voz e dirija-se à sala indicada.</div></section>
  <section class="stats">
   <div class="stat"><span>Aguardando</span><strong id="waitingCount">0</strong></div>
   <div class="stat"><span>Chamado</span><strong class="teal" id="calledCount">0</strong></div>
@@ -67,6 +67,7 @@ main{max-width:1400px;margin:auto;padding:26px clamp(14px,3vw,32px) 40px}.hero{d
 </main>
 <div id="slideshowOverlay" aria-label="Apresentação de fotos e vídeos" style="display:none;position:fixed;inset:0;z-index:9999;background:#000;align-items:center;justify-content:center"><img id="slideshowImage" alt="" style="display:none;width:100%;height:100%;object-fit:contain"><video id="slideshowVideo" style="display:none;width:100%;height:100%;object-fit:contain" autoplay playsinline></video></div>
 <div class="toast" id="toast" role="status"></div>
+<audio id="callSignalAudio" src="chamador.mp3" preload="auto" playsinline></audio>
 <script>
 (function(){
 "use strict";
@@ -77,6 +78,7 @@ let patients=[];
 let lastAnnouncement="";
 let voices=[];
 let publicVoiceEnabled=false;
+let publicAudioContext=null;
 let lastPublicAnnouncementKey="";
 const announcedPublicCallKeys=new Set();
 let slideshowItems=[];
@@ -241,6 +243,47 @@ function updateSlideshowIdle(){
  if(!slideshowIdleSince)slideshowIdleSince=Date.now();
  if(!slideshowActive&&Date.now()-slideshowIdleSince>=60000&&slideshowItems.length){slideshowIndex=0;showSlideshowItem();}
 }
+let callAudioUnlocked=false;
+let callSignalContext=null;
+function callAudioStatus(message){const status=$("publicVoiceStatus");if(status)status.textContent=message;}
+function playCallSignal(){
+ const audio=$("callSignalAudio");
+ if(!audio){callAudioStatus("Arquivo de som não encontrado. Confira chamador.mp3 na pasta local.");return;}
+ try{
+  audio.pause();
+  audio.currentTime=0;
+  audio.volume=0.82;
+  const playback=audio.play();
+  if(playback&&typeof playback.then==="function"){
+   playback.then(()=>callAudioStatus("Som de chamada reproduzido. Aguardando próxima chamada."))
+    .catch(()=>callAudioStatus("O navegador bloqueou o som. Clique uma vez na tela da sala e tente novamente."));
+  }else{
+   callAudioStatus("Som de chamada reproduzido. Aguardando próxima chamada.");
+  }
+ }catch(e){callAudioStatus("Não foi possível reproduzir chamador.mp3. Confira o volume e o arquivo.");}
+}
+function unlockCallAudio(){
+ const audio=$("callSignalAudio");
+ if(!audio)return;
+ try{
+  audio.muted=true;
+  const playback=audio.play();
+  if(playback&&typeof playback.then==="function"){
+   playback.then(()=>{
+    audio.pause();
+    audio.currentTime=0;
+    audio.muted=false;
+    callAudioUnlocked=true;
+    document.removeEventListener("pointerdown",unlockCallAudio);
+    document.removeEventListener("keydown",unlockCallAudio);
+    callAudioStatus("Áudio habilitado. Aguardando próxima chamada.");
+   }).catch(()=>{audio.muted=false;});
+  }else{
+   audio.pause();audio.currentTime=0;audio.muted=false;callAudioUnlocked=true;
+  }
+ }catch(e){audio.muted=false;}
+}
+
 function renderPublic(){
  const today=patients.filter(p=>p.day===todayKey);
  const called=today.flatMap(p=>activeCallsFor(p)).sort((a,b)=>(a.state.updatedAt||0)-(b.state.updatedAt||0));
@@ -248,7 +291,7 @@ function renderPublic(){
  const box=$("calledDisplay");
  if(box)box.innerHTML=called.length?called.map(item=>'<article class="called-card'+(item.state.status==="Atendendo"?" attending":item.state.status==="Chamado"?" blinking":"")+'"><div class="call-label">'+(item.state.status==="Atendendo"?"EM ATENDIMENTO":"PACIENTE CHAMADO")+'</div><div class="call-name">'+esc(String(item.p.name||"").toLocaleUpperCase("pt-BR"))+'</div><div class="call-room">➜ '+esc(roomForService(item.p,item.service)||item.state.callLabel||item.service)+'</div></article>').join(''):'<div class="no-calls"><strong>Aguardando próxima chamada</strong>Por favor, aguarde. Seu nome será anunciado aqui.</div>';
  const q=$("publicQueueList");if(q){const waiting=today.filter(p=>p.status!=="Atendido"&&!activeState(p)).sort((a,b)=>(Number(!!b.priority)-Number(!!a.priority))||(a.created||0)-(b.created||0)).slice(0,8);q.innerHTML=waiting.length?waiting.map((p,i)=>'<div class="queue-person"><strong>'+esc(String(p.name||"").toLocaleUpperCase("pt-BR"))+'</strong><span>Posição '+(i+1)+' · '+esc(p.room||"Sala a definir")+'</span></div>').join(""):'<div class="queue-person"><span>Não há outros pacientes aguardando.</span></div>';}
- if(publicVoiceEnabled){for(const item of called){if(item.state.status!=="Chamado")continue;const p=item.p,key=String(p.id)+"-"+String(item.state.updatedAt||p.created)+"-"+item.service;if(announcedPublicCallKeys.has(key))continue;announcedPublicCallKeys.add(key);lastPublicAnnouncementKey=key;announce({name:p.name,room:roomForService(p,item.service)||item.state.callLabel||item.service},true);}}
+ for(const item of called){if(item.state.status!=="Chamado")continue;const p=item.p,key=String(p.id)+"-"+String(item.state.updatedAt||p.created)+"-"+item.service;if(announcedPublicCallKeys.has(key))continue;announcedPublicCallKeys.add(key);lastPublicAnnouncementKey=key;playCallSignal();}
 }
 function voiceLooksFeminine(v){return /female|feminina|maria|francisca|luciana|camila|helena|samantha|joana|vitoria|vit[oó]ria|sofia|sophia|fernanda|bruna|leticia|letícia|raquel|manuela/i.test(v.name||"");}
 function choosePortugueseFemaleVoice(){
@@ -311,7 +354,7 @@ function xlsxZip(files){const enc=new TextEncoder(),parts=[],central=[];let offs
 function makeFavmedXlsx(rows){const widths=[28,16,15,24,24,24,18,48,22,15,13,13],last=rows.length,cols=widths.map((w,i)=>'<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>').join("");const sheetRows=rows.map((r,ri)=>'<row r="'+(ri+1)+'">'+r.map((v,ci)=>xlsxCell(v,ri+1,ci+1)).join("")+'</row>').join("");const files=[{name:"[Content_Types].xml",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'},{name:"_rels/.rels",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},{name:"xl/workbook.xml",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Dashboard FAVMED" sheetId="1" r:id="rId1"/></sheets></workbook>'},{name:"xl/_rels/workbook.xml.rels",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'},{name:"xl/styles.xml",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF087F8C"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color rgb="FFD5E1E5"/></left><right style="thin"><color rgb="FFD5E1E5"/></right><top style="thin"><color rgb="FFD5E1E5"/></top><bottom style="thin"><color rgb="FFD5E1E5"/></bottom><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1"/><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1"><alignment vertical="center" wrapText="1"/></xf><xf numFmtId="14" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1"/><xf numFmtId="21" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'},{name:"xl/worksheets/sheet1.xml",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>'+cols+'</cols><sheetData>'+sheetRows+'</sheetData><autoFilter ref="A1:L'+Math.max(1,last)+'"/></worksheet>'}];return xlsxZip(files);}
 $("search").addEventListener("input",render);$("exportDashboard").addEventListener("click",()=>{const rows=[["Nome","CPF","Nascimento","Convênio","Função","Tipo de exame","Salas","Exames por sala","Status","Data","Entrada","Saída"],...patients.filter(p=>p.day===todayKey).map(p=>[p.name,p.cpf||"",p.birthDate||"",p.insurance||"",p.job||"",(p.examTypes||[]).join(", "),roomsText(p),Object.entries(p.examsByRoom||{}).filter(([,v])=>v&&v.length).map(([r,v])=>r+": "+v.join(", ")).join(" | "),p.status,p.day,p.time,p.exitTime||""])];const blob=makeFavmedXlsx(rows);const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="favmed-dashboard-"+todayKey+".xlsx";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);});
 fillVoices();if("speechSynthesis"in window)window.speechSynthesis.addEventListener("voiceschanged",fillVoices);
- const enablePublic=$("enablePublicVoice");if(enablePublic)enablePublic.addEventListener("click",()=>{if(!("speechSynthesis"in window)){notify("Este navegador não oferece leitura de voz.");return;}publicVoiceEnabled=true;const slideAudio=$("slideshowVideo");if(slideAudio){slideAudio.muted=false;slideAudio.volume=1;}enablePublic.textContent="✓ Áudio da sala ativado";enablePublic.disabled=true;const status=$("publicVoiceStatus");if(status)status.textContent="Áudio habilitado neste computador. Aguardando chamadas.";const u=new SpeechSynthesisUtterance("Áudio da sala ativado. Aguardando chamadas de pacientes.");u.lang="pt-BR";u.rate=.9;u.volume=1;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);});
+
 const enableReception=$("enableReceptionVoice");
 if(enableReception)enableReception.addEventListener("click",()=>{
  publicVoiceEnabled=true;enableReception.textContent="✓ Voz automática ativada";enableReception.disabled=true;
@@ -320,7 +363,7 @@ if(enableReception)enableReception.addEventListener("click",()=>{
  u.onerror=()=>{if(status)status.textContent="Não foi possível reproduzir. Verifique o volume e as vozes do computador da recepção.";};
  window.speechSynthesis.cancel();window.speechSynthesis.speak(u);
 });
-if(publicMode){load().then(async()=>{await refreshSlideshowItems();renderPublic();});if(!serverMode)window.addEventListener("storage",e=>{if(e.key===KEY){load().then(renderPublic);}});setInterval(()=>{load().then(renderPublic);},1200);setInterval(refreshSlideshowItems,15000);}
+if(publicMode){document.addEventListener("pointerdown",unlockCallAudio);document.addEventListener("keydown",unlockCallAudio);load().then(async()=>{await refreshSlideshowItems();renderPublic();});if(!serverMode)window.addEventListener("storage",e=>{if(e.key===KEY){load().then(renderPublic);}});setInterval(()=>{load().then(renderPublic);},1200);setInterval(refreshSlideshowItems,15000);}
 else{load().then(()=>{render();renderPublic();});setInterval(()=>{load().then(()=>{render();renderPublic();});},1800);const opener=$("openDisplay");if(opener)opener.addEventListener("click",()=>{const display=window.open(location.href.split("?")[0]+"?painel=1","favmedSalaEspera");if(!display)notify("O navegador bloqueou a janela. Permita pop-ups para este arquivo e tente novamente.");});}
 })();
 </script>
