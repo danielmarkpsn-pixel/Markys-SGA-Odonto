@@ -8,12 +8,13 @@ Aplicativo local da Clínica Favmed para recepção, sala de espera e profission
 - `logo-favmed.png`: logotipo da clínica.
 - `servidor-favmed.ps1`: servidor local e armazenamento compartilhado.
 - `fila.json`: dados operacionais locais (criado ao iniciar o servidor).
+- `documentos-pacientes/`: PDFs anexados aos cadastros; a pasta é criada automaticamente no computador que executa o servidor.
 - `INICIAR-SERVIDOR-FAVMED.bat`: inicia o servidor.
 - `INSTRUCOES-REDE-LOCAL.txt`: instruções completas de configuração e uso.
 
 ## Início rápido
-1. Baixe o ZIP da branch `favmed-local-chamador-windows` e extraia em uma pasta permanente.
-2. Execute `INICIAR-SERVIDOR-FAVMED.bat) no computador principal.
+1. Baixe o ZIP da branch `main` deste repositório e extraia em uma pasta permanente.
+2. Execute `INICIAR-SERVIDOR-FAVMED.bat` no computador principal.
 3. Use os links exibidos na janela do servidor:
    - Recepção: `http://IP:PORTA/`
    - Sala de espera: `http://IP:PORTA/?painel=1`
@@ -30,6 +31,8 @@ Aplicativo local da Clínica Favmed para recepção, sala de espera e profission
 - Anúncio por voz com seleção automática/manual de voz disponível, teste e repetição.
 - Exportação CSV, relatório PDF A4 vertical e backup JSON.
 - Atualização automática entre recepção, painel profissional e sala de espera.
+- Chamadas da recepção para Recepção 1, 2 e 3; marcador de ASO pendente; anexos PDF opcionais de até 10 MB.
+- Exames específicos adicionais de laboratório e exames complementares.
 - Mantém a identidade visual da Favmed (branco, cinza-claro e azul-petróleo).
 
 ## Segurança e limitações
