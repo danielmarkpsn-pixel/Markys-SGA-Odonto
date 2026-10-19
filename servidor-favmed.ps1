@@ -43,7 +43,7 @@ try {
   # Prioriza a interface IPv4 ativa com gateway (normalmente Wi-Fi ou cabo).
   try {
     $ips += Get-NetIPConfiguration -ErrorAction Stop |
-      Where-Object { $_.NetAdapter.Status -eq "Up" -and $_.IPv4DefaultGateway -ne $null } |
+      Where-Object { $_.NetAdapter.Status -eq "Up" } |
       ForEach-Object { $_.IPv4Address } |
       Where-Object { $_.IPAddress -and $_.IPAddress -notlike "127.*" -and $_.IPAddress -notlike "169.254.*" } |
       ForEach-Object { $_.IPAddress }
