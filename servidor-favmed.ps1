@@ -6,6 +6,8 @@ $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $DataFile = Join-Path $Root "fila.json"
 $MediaFile = Join-Path $Root "midia.json"
 $SlideshowDir = Join-Path $Root "midia-sala"
+$DocumentsDir = Join-Path $Root "documentos-pacientes"
+if (-not (Test-Path $DocumentsDir)) { New-Item -ItemType Directory -Path $DocumentsDir | Out-Null }
 if (-not (Test-Path $SlideshowDir)) { New-Item -ItemType Directory -Path $SlideshowDir | Out-Null }
 $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 if (-not (Test-Path $DataFile)) { [System.IO.File]::WriteAllText($DataFile, "[]", $Utf8NoBom) }
@@ -33,7 +35,7 @@ try {
   Write-Host " FAVMED - Servidor da rede local" -ForegroundColor Cyan
   Write-Host "===============================================" -ForegroundColor Cyan
   Write-Host "Recepcao: http://127.0.0.1:$Port/"
-  Write-Host "Tela sala de espera: http://127.0.0.1:$Port/sala"
+  Write-Host "Tela sala de espera: http://127.0.0.1:$Port/?painel=1"
   Write-Host "Painel do profissional: http://127.0.0.1:$Port/consultorio"
   Write-Host ""
   Write-Host "Enderecos para outros dispositivos:" -ForegroundColor Yellow
@@ -58,7 +60,7 @@ try {
   if ($ips.Count -eq 0) {
     Write-Host "AVISO: nao consegui detectar um IPv4 da rede. Verifique se o computador esta conectado ao Wi-Fi ou cabo." -ForegroundColor Yellow
   } else {
-    foreach ($ip in $ips) { Write-Host ("Recepcao: http://{0}:{1}/" -f $ip, $Port); Write-Host ("Sala:     http://{0}:{1}/sala" -f $ip, $Port); Write-Host ("Profissional: http://{0}:{1}/consultorio" -f $ip, $Port) }
+    foreach ($ip in $ips) { Write-Host ("Recepcao: http://{0}:{1}/" -f $ip, $Port); Write-Host ("Sala:     http://{0}:{1}/?painel=1" -f $ip, $Port); Write-Host ("Profissional: http://{0}:{1}/consultorio" -f $ip, $Port) }
   }
   # Abre automaticamente o sistema no navegador da recepcao.
   try { Start-Process ("http://127.0.0.1:{0}/" -f $Port) } catch { Write-Host "Abra manualmente o endereco local mostrado acima." -ForegroundColor Yellow }
@@ -151,6 +153,27 @@ try {
             $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"ok":true}'); $type = "application/json; charset=utf-8"
           } catch { $status = "400 Bad Request"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"error":"invalid media"}'); $type = "application/json; charset=utf-8" }
         }
+      } elseif ($path -eq "/api/document" -and $method -eq "POST") {
+        if ($contentLength -gt 15728640 -or $read -ne $contentLength) { $status = "413 Payload Too Large"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"error":"PDF maior que 10 MB ou requisição inválida"}'); $type = "application/json; charset=utf-8" }
+        else {
+          try {
+            $doc = ConvertFrom-Json -InputObject ([System.Text.Encoding]::UTF8.GetString($bodyBytes))
+            if ($null -eq $doc -or [string]$doc.id -notmatch "^[A-Za-z0-9_-]{1,80}$" -or [string]::IsNullOrWhiteSpace([string]$doc.data)) { throw "Documento inválido" }
+            $pdfBytes = [System.Convert]::FromBase64String([string]$doc.data)
+            if ($pdfBytes.Length -gt 10485760 -or $pdfBytes.Length -lt 5 -or [System.Text.Encoding]::ASCII.GetString($pdfBytes, 0, 5) -ne "%PDF-") { throw "PDF inválido ou maior que 10 MB" }
+            $docPath = Join-Path $DocumentsDir ([string]$doc.id + ".pdf")
+            [System.IO.File]::WriteAllBytes($docPath, $pdfBytes)
+            $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"ok":true}'); $type = "application/json; charset=utf-8"
+          } catch { $status = "400 Bad Request"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"error":"PDF inválido. Envie um PDF de até 10 MB."}'); $type = "application/json; charset=utf-8" }
+        }
+      } elseif ($path.StartsWith("/documentos/") -and $method -eq "GET") {
+        try {
+          $docName = [Uri]::UnescapeDataString($path.Substring("/documentos/".Length))
+          if ($docName -notmatch "^[A-Za-z0-9_-]{1,80}\.pdf$") { throw "Invalid document name" }
+          $docPath = Join-Path $DocumentsDir $docName
+          if (-not (Test-Path -LiteralPath $docPath -PathType Leaf)) { throw "Not found" }
+          $responseBytes = [System.IO.File]::ReadAllBytes($docPath); $type = "application/pdf"
+        } catch { $status = "404 Not Found"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes("Documento não encontrado") }
       } elseif ($path -eq "/api/state" -and $method -eq "GET") {
         $responseBytes = [System.IO.File]::ReadAllBytes($DataFile); $type = "application/json; charset=utf-8"
       } elseif ($path -eq "/api/state" -and $method -eq "POST") {
@@ -164,7 +187,9 @@ try {
             $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"ok":true}'); $type = "application/json; charset=utf-8"
           } catch { $status = "400 Bad Request"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"error":"invalid JSON"}'); $type = "application/json; charset=utf-8" }
         }
-      } elseif ($path -eq "/" -or $path -eq "/index.html" -or $path -eq "/sala" -or $path -eq "/sala/") {
+      } elseif ($path -eq "/sala" -or $path -eq "/sala/" -or $path -eq "/sala-espera") {
+        $status = "302 Found"; $type = "text/plain; charset=utf-8"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes("Abrindo painel público de chamadas")
+      } elseif ($path -eq "/" -or $path -eq "/index.html") {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "index.html")); $type = "text/html; charset=utf-8"
       } elseif ($path -eq "/consultorio" -or $path -eq "/consultorio.html") {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "consultorio.html")); $type = "text/html; charset=utf-8"
@@ -180,7 +205,7 @@ try {
         $status = "404 Not Found"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes("Not found")
       }
       $header = "HTTP/1.1 $status`r`nContent-Type: $type`r`nContent-Length: $($responseBytes.Length)`r`nCache-Control: no-store`r`nConnection: close`r`n"
-      if ($status -eq "302 Found") { $header += "Location: /sala`r`n" }
+      if ($status -eq "302 Found") { $header += "Location: /?painel=1`r`n" }
       $header += "`r`n"
       $headBytes = [System.Text.Encoding]::ASCII.GetBytes($header)
       $stream.Write($headBytes, 0, $headBytes.Length)
