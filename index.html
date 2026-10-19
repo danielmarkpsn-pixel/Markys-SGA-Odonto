@@ -238,7 +238,7 @@ const refreshSlideButton=$("refreshSlideshowList");if(refreshSlideButton)refresh
 function updateSlideshowIdle(){
  if(!publicMode)return;
  const today=patients.filter(p=>p.day===todayKey);
- const busy=today.some(p=>!!activeState(p));
+ const busy=today.some(p=>!!activeState(p)||(p.receptionCall&&p.receptionCall.status==="Chamado"));
  if(busy){slideshowIdleSince=Date.now();if(slideshowActive)hideSlideshow();return;}
  if(!slideshowIdleSince)slideshowIdleSince=Date.now();
  if(!slideshowActive&&Date.now()-slideshowIdleSince>=60000&&slideshowItems.length){slideshowIndex=0;showSlideshowItem();}
