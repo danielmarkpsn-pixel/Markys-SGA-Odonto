@@ -1,4 +1,4 @@
-# FAVMED Odonto Local — Gestão de fila odontológica para Windows
+# Markys SGA Odonto — Gestão de fila odontológica para Windows
 
 Aplicação local para organizar a recepção, a sala de espera e os consultórios de uma clínica odontológica. Esta etapa aproveita o fluxo existente de fila compartilhada, chamadas por voz e acompanhamento de atendimento. **Ainda não substitui um prontuário odontológico completo**: odontograma, anamnese clínica, plano de tratamento, orçamento e financeiro precisam ser implementados e validados antes de uso clínico.
 
