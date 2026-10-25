@@ -32,7 +32,7 @@ if ($null -eq $listener) {
 try {
   Write-Host ""
   Write-Host "===============================================" -ForegroundColor Cyan
-  Write-Host " FAVMED - Servidor da rede local" -ForegroundColor Cyan
+  Write-Host " FAVMED Odonto - Servidor da rede local" -ForegroundColor Cyan
   Write-Host "===============================================" -ForegroundColor Cyan
   Write-Host "Recepcao: http://127.0.0.1:$Port/"
   Write-Host "Tela sala de espera: http://127.0.0.1:$Port/sala"
