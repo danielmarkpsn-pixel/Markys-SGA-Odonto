@@ -1,4 +1,4 @@
-# FAVMED local HTTP server - Windows PowerShell 5.1+
+# Markys SGA Odonto local HTTP server - Windows PowerShell 5.1+
 $ErrorActionPreference = "Stop"
 $Port = 2222
 $PortCandidates = @(2222)
@@ -26,13 +26,13 @@ foreach ($candidatePort in $PortCandidates) {
 }
 if ($null -eq $listener) {
   Write-Host "ERRO: a porta fixa 2222 não está disponível." -ForegroundColor Red
-  Write-Host "Feche outra instância do FAVMED ou libere a porta 2222 e tente novamente."
+  Write-Host "Feche outra instância do Markys SGA Odonto ou libere a porta 2222 e tente novamente."
   exit 1
 }
 try {
   Write-Host ""
   Write-Host "===============================================" -ForegroundColor Cyan
-  Write-Host " FAVMED Odonto - Servidor da rede local" -ForegroundColor Cyan
+  Write-Host " Markys SGA Odonto - Servidor da rede local" -ForegroundColor Cyan
   Write-Host "===============================================" -ForegroundColor Cyan
   Write-Host "Recepcao: http://127.0.0.1:$Port/"
   Write-Host "Tela sala de espera: http://127.0.0.1:$Port/sala"
