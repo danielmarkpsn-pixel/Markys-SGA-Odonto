@@ -1,4 +1,4 @@
-FAVMED ODONTO — CONFIGURAÇÃO E ACESSO PELA REDE LOCAL
+MARKYS SGA ODONTO — CONFIGURAÇÃO E ACESSO PELA REDE LOCAL
 
 ESTADO DESTA ADAPTAÇÃO
 Este repositório está em migração de um chamador de medicina ocupacional para um fluxo odontológico. A fila e as telas de recepção/consultório são uma base operacional; ainda não representam um prontuário odontológico completo. Use apenas dados fictícios durante desenvolvimento e testes.
