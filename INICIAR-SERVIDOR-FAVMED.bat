@@ -1,7 +1,7 @@
 @echo off
-title FAVMED - Servidor de Rede Local
+title FAVMED Odonto - Servidor de Rede Local
 cd /d "%~dp0"
-echo Iniciando servidor local da Clinica Favmed...
+echo Iniciando servidor local da Clínica Odontológica...
 powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0servidor-favmed.ps1"
 if errorlevel 1 (
   echo.
