@@ -56,6 +56,7 @@ checks = {
     "finance API": ('/api/finance' in server and 'financeiro.json' in server),
     "agenda frontend API": ("'/api/appointments'" in (ROOT / "agenda.html").read_text(encoding="utf-8")),
     "finance frontend API": ("'/api/finance'" in (ROOT / "financeiro.html").read_text(encoding="utf-8")),
+    "finance appointment link": ("'/api/appointments'" in (ROOT / "financeiro.html").read_text(encoding="utf-8") and "appointmentId" in (ROOT / "financeiro.html").read_text(encoding="utf-8")),
 }
 failed = [name for name, ok in checks.items() if not ok]
 if failed:
