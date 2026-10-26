@@ -54,6 +54,7 @@ jobs:
           $files = @(
             "index.html",
             "consultorio.html",
+            "prontuario.html",
             "servidor-favmed.ps1",
             "INICIAR-SERVIDOR-FAVMED.bat",
             "INSTRUCOES-REDE-LOCAL.txt",
