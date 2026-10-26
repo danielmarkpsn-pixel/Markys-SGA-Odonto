@@ -1,6 +1,6 @@
 # Markys SGA Odonto — Gestão de fila odontológica para Windows
 
-Aplicação local para organizar a recepção, a sala de espera e os consultórios de uma clínica odontológica. Esta etapa aproveita o fluxo existente de fila compartilhada, chamadas por voz e acompanhamento de atendimento. **Ainda não substitui um prontuário odontológico completo**: odontograma, anamnese clínica, plano de tratamento, orçamento e financeiro precisam ser implementados e validados antes de uso clínico.
+Aplicação local para organizar a recepção, a sala de espera e os consultórios de uma clínica odontológica. Esta etapa aproveita o fluxo existente de fila compartilhada, chamadas por voz e acompanhamento de atendimento. **Ainda não substitui um prontuário odontológico completo**: foi adicionado um módulo inicial com anamnese, odontograma FDI, evolução e plano de tratamento, mas faltam revisão clínica, anexos clínicos integrados, orçamento, financeiro, autenticação e validação antes de qualquer uso real.
 
 ## Estrutura
 - `index.html`: recepção e painel público da sala de espera.
@@ -19,7 +19,7 @@ Aplicação local para organizar a recepção, a sala de espera e os consultóri
 2. Execute `INICIAR-SERVIDOR-FAVMED.bat`.
 3. Use os endereços e a porta mostrados pela janela do servidor. A configuração atual tenta a porta TCP `2222`; se estiver ocupada, o servidor encerra com aviso.
 4. O módulo clínico fica em `/prontuario` e o painel da equipe em `/consultorio`.
-4. Para acessar de outros dispositivos, use o endereço IPv4 do computador servidor e a mesma porta, na mesma rede local.
+5. Para acessar de outros dispositivos, use o endereço IPv4 do computador servidor e a mesma porta, na mesma rede local.
 
 ## Escopo atual herdado
 O projeto original oferece cadastro operacional, fila por sala/serviço, chamadas, status por atendimento, atualização entre telas, exportação e backup. Esses recursos precisam passar por testes de regressão após a adaptação odontológica.
@@ -27,13 +27,13 @@ O projeto original oferece cadastro operacional, fila por sala/serviço, chamada
 ## Antes de usar com pacientes reais
 - A versão atual não oferece autenticação nem criptografia; não a exponha à internet nem a redes Wi-Fi públicas.
 - Dados de saúde são sensíveis. Restrinja o acesso ao computador e à pasta de dados, mantenha backups protegidos e não coloque dados reais em commits ou no GitHub.
-- Não use a fila como substituto do prontuário clínico oficial. Registre procedimentos, evolução e documentos em sistema adequado até que os módulos odontológicos sejam desenvolvidos e validados.
+- O módulo de prontuário ainda é inicial e não foi validado para uso clínico. Não registre dados reais, diagnósticos ou condutas clínicas nesta versão.
 - Não considere este software, por si só, como garantia de conformidade com a LGPD ou com normas profissionais.
 
 ## Próximas etapas recomendadas
 1. Corrigir e testar o servidor e as rotas de recepção/consultório.
 2. Adaptar os cadastros para agenda, dentista, cadeira e tipo de consulta.
-3. Criar prontuário odontológico com anamnese, odontograma por dente/face, evolução e anexos.
+3. Expandir e validar o prontuário inicial, incluindo anexos clínicos e fluxo de revisão/assinatura profissional.
 4. Ligar plano de tratamento e orçamento ao financeiro.
 5. Implementar autenticação, perfis de acesso, trilha de auditoria e backup protegido.
 6. Testar com dados fictícios antes de qualquer uso real.
