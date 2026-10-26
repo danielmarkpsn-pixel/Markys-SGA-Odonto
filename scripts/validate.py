@@ -9,6 +9,8 @@ REQUIRED = [
     "index.html",
     "consultorio.html",
     "prontuario.html",
+    "agenda.html",
+    "financeiro.html",
     "servidor-favmed.ps1",
     "INICIAR-SERVIDOR-FAVMED.bat",
     "INSTRUCOES-REDE-LOCAL.txt",
@@ -25,7 +27,7 @@ if node.returncode:
     sys.exit(1)
 
 script_pattern = re.compile(r"<script\b[^>]*>(.*?)</script\s*>", re.I | re.S)
-for name in ("index.html", "consultorio.html", "prontuario.html"):
+for name in ("index.html", "consultorio.html", "prontuario.html", "agenda.html", "financeiro.html"):
     source = (ROOT / name).read_text(encoding="utf-8")
     scripts = script_pattern.findall(source)
     if not scripts:
