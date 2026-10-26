@@ -47,4 +47,21 @@ for name in ("index.html", "consultorio.html", "prontuario.html", "agenda.html",
             temp_path.unlink(missing_ok=True)
     print(f"OK: {name} — {len(scripts)} bloco(s) JavaScript verificado(s)")
 
+# Cross-check the new modules against the local server routes and APIs.
+server = (ROOT / "servidor-favmed.ps1").read_text(encoding="utf-8")
+checks = {
+    "agenda route": ('/agenda' in server and 'agenda.html' in server),
+    "finance route": ('/financeiro' in server and 'financeiro.html' in server),
+    "appointments API": ('/api/appointments' in server and 'agenda.json' in server),
+    "finance API": ('/api/finance' in server and 'financeiro.json' in server),
+    "agenda frontend API": ("'/api/appointments'" in (ROOT / "agenda.html").read_text(encoding="utf-8")),
+    "finance frontend API": ("'/api/finance'" in (ROOT / "financeiro.html").read_text(encoding="utf-8")),
+}
+failed = [name for name, ok in checks.items() if not ok]
+if failed:
+    print("Integrações ausentes: " + ", ".join(failed), file=sys.stderr)
+    sys.exit(1)
+for name in checks:
+    print(f"OK: integração {name}")
+
 print("OK: arquivos obrigatórios presentes.")
