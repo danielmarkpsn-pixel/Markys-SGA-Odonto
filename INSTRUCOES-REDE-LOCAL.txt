@@ -19,6 +19,7 @@ Use a porta e o IP exibidos na janela do servidor:
 - Recepção: http://127.0.0.1:2222/
 - Sala de espera: http://127.0.0.1:2222/sala
 - Painel do profissional: http://127.0.0.1:2222/consultorio
+- Prontuário odontológico inicial: http://127.0.0.1:2222/prontuario
 
 Para outro computador ou TV na mesma rede, substitua 127.0.0.1 pelo IPv4 do computador servidor. O endereço 127.0.0.1 funciona apenas no próprio computador. A tela pública deve exibir somente o mínimo necessário para chamar o paciente.
 
@@ -26,7 +27,7 @@ Para outro computador ou TV na mesma rede, substitua 127.0.0.1 pelo IPv4 do comp
 - A versão atual não tem login nem criptografia. Não exponha a porta à internet e não use redes de visitantes.
 - Não insira anamnese, diagnósticos, CPF, radiografias ou outros dados clínicos reais nesta versão em migração.
 - Restrinja acesso à pasta do sistema e mantenha cópias de segurança protegidas.
-- O sistema ainda precisa de agenda odontológica, prontuário com odontograma, plano de tratamento, orçamento, financeiro e perfis de acesso antes de ser considerado um sistema de gestão odontológica completo.
+- O módulo de prontuário recém-adicionado é inicial e não foi validado para uso clínico. Ainda faltam agenda completa, orçamento, financeiro, autenticação, perfis de acesso, auditoria e proteção adequada dos dados.
 
 5. TESTE DE ACEITAÇÃO
 Antes de qualquer uso real, teste com nomes fictícios: cadastro, seleção de consultório, chamada, início, liberação, atualização em outra tela, reabertura, exportação e backup. Confira também o comportamento quando o servidor é encerrado ou a porta está ocupada.
