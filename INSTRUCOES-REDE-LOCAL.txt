@@ -5,7 +5,7 @@ Este repositório está em migração de um chamador de medicina ocupacional par
 
 1. PREPARAR
 1. Baixe o ZIP da branch adaptacao-odontologia e extraia em uma pasta permanente, por exemplo C:\FAVMED-Odonto.
-2. Confirme que existem index.html, consultorio.html, servidor-favmed.ps1 e INICIAR-SERVIDOR-FAVMED.bat.
+2. Confirme que existem index.html, consultorio.html, prontuario.html, agenda.html, financeiro.html, servidor-favmed.ps1 e INICIAR-SERVIDOR-FAVMED.bat.
 3. Não compartilhe fila.json, documentos-pacientes ou backups com dados reais.
 
 2. INICIAR
@@ -27,7 +27,7 @@ Para outro computador ou TV na mesma rede, substitua 127.0.0.1 pelo IPv4 do comp
 - A versão atual não tem login nem criptografia. Não exponha a porta à internet e não use redes de visitantes.
 - Não insira anamnese, diagnósticos, CPF, radiografias ou outros dados clínicos reais nesta versão em migração.
 - Restrinja acesso à pasta do sistema e mantenha cópias de segurança protegidas.
-- O módulo de prontuário recém-adicionado é inicial e não foi validado para uso clínico. Ainda faltam agenda completa, orçamento, financeiro, autenticação, perfis de acesso, auditoria e proteção adequada dos dados.
+- O módulo de prontuário recém-adicionado é inicial e não foi validado para uso clínico. A agenda e o financeiro também são módulos iniciais e ainda precisam de validação; faltam integração entre plano de tratamento e cobranças, autenticação, perfis de acesso, auditoria e proteção adequada dos dados.
 
 5. TESTE DE ACEITAÇÃO
 Antes de qualquer uso real, teste com nomes fictícios: cadastro, seleção de consultório, chamada, início, liberação, atualização em outra tela, reabertura, exportação e backup. Confira também o comportamento quando o servidor é encerrado ou a porta está ocupada.
