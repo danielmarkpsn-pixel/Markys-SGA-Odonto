@@ -5,6 +5,7 @@ Aplicação local para organizar a recepção, a sala de espera e os consultóri
 ## Estrutura
 - `index.html`: recepção e painel público da sala de espera.
 - `consultorio.html`: painel da equipe clínica.
+- `prontuario.html`: módulo inicial de prontuário, anamnese, odontograma FDI, evolução e plano de tratamento.
 - `logo-favmed.png`: logotipo atual (pode ser substituído pelo logotipo da clínica odontológica).
 - `servidor-favmed.ps1`: servidor HTTP local para Windows PowerShell 5.1+.
 - `fila.json`: dados operacionais locais, criado automaticamente.
@@ -17,6 +18,7 @@ Aplicação local para organizar a recepção, a sala de espera e os consultóri
 1. Baixe o ZIP da branch `adaptacao-odontologia` e extraia para uma pasta permanente no computador servidor.
 2. Execute `INICIAR-SERVIDOR-FAVMED.bat`.
 3. Use os endereços e a porta mostrados pela janela do servidor. A configuração atual tenta a porta TCP `2222`; se estiver ocupada, o servidor encerra com aviso.
+4. O módulo clínico fica em `/prontuario` e o painel da equipe em `/consultorio`.
 4. Para acessar de outros dispositivos, use o endereço IPv4 do computador servidor e a mesma porta, na mesma rede local.
 
 ## Escopo atual herdado
