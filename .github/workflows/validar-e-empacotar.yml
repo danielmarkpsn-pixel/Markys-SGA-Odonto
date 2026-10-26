@@ -1,0 +1,81 @@
+name: Validar e empacotar Markys SGA Odonto
+
+on:
+  push:
+    branches:
+      - adaptacao-odontologia
+  pull_request:
+    branches:
+      - main
+      - adaptacao-odontologia
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validar-e-empacotar:
+    runs-on: windows-latest
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validar arquivos e sintaxe JavaScript
+        run: python scripts/validate.py
+
+      - name: Validar sintaxe do servidor PowerShell
+        shell: powershell
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path "servidor-favmed.ps1"), [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+          Write-Host "OK: sintaxe PowerShell válida."
+
+      - name: Montar pacote portátil limpo
+        shell: powershell
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP "Markys-SGA-Odonto"
+          $zip = Join-Path $env:RUNNER_TEMP "Markys-SGA-Odonto-Windows.zip"
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+          $files = @(
+            "index.html",
+            "consultorio.html",
+            "servidor-favmed.ps1",
+            "INICIAR-SERVIDOR-FAVMED.bat",
+            "INSTRUCOES-REDE-LOCAL.txt",
+            "README.md",
+            "logo-favmed.png"
+          )
+          foreach ($file in $files) {
+            if (Test-Path $file -PathType Leaf) {
+              Copy-Item $file -Destination $stage
+            }
+          }
+          if (-not (Test-Path (Join-Path $stage "logo-favmed.png"))) {
+            Write-Error "O arquivo de logo referenciado pelas telas não foi encontrado."
+            exit 1
+          }
+          Compress-Archive -Path (Join-Path $stage "*") -DestinationPath $zip -Force
+          Write-Host "Pacote criado sem fila.json, midia.json ou documentos operacionais existentes."
+
+      - name: Publicar pacote portátil
+        uses: actions/upload-artifact@v4
+        with:
+          name: Markys-SGA-Odonto-Windows
+          path: ${{ runner.temp }}\\Markys-SGA-Odonto-Windows.zip
+          if-no-files-found: error
+          retention-days: 14
