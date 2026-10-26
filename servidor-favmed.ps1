@@ -19,8 +19,10 @@ function Write-JsonAtomically([string]$Path, [string]$Json) {
   $tempPath = $Path + "." + [Guid]::NewGuid().ToString("N") + ".tmp"
   try {
     [System.IO.File]::WriteAllText($tempPath, $Json, $Utf8NoBom)
-    if (Test-Path -LiteralPath $Path) { [System.IO.File]::Replace($tempPath, $Path, $null) }
-    else { [System.IO.File]::Move($tempPath, $Path) }
+    if (Test-Path -LiteralPath $Path) {
+      try { [System.IO.File]::Replace($tempPath, $Path, $null) }
+      catch { Move-Item -LiteralPath $tempPath -Destination $Path -Force }
+    } else { [System.IO.File]::Move($tempPath, $Path) }
   } finally { if (Test-Path -LiteralPath $tempPath) { Remove-Item -LiteralPath $tempPath -Force -ErrorAction SilentlyContinue } }
 }
 if (-not (Test-Path $MediaFile)) { [System.IO.File]::WriteAllText($MediaFile, '{"url":""}', $Utf8NoBom) }
@@ -49,6 +51,8 @@ try {
   Write-Host "Recepcao: http://127.0.0.1:$Port/"
   Write-Host "Tela sala de espera: http://127.0.0.1:$Port/sala"
   Write-Host "Painel do profissional: http://127.0.0.1:$Port/consultorio"
+  Write-Host "Agenda odontologica: http://127.0.0.1:$Port/agenda"
+  Write-Host "Financeiro: http://127.0.0.1:$Port/financeiro"
   Write-Host ""
   Write-Host "Enderecos para outros dispositivos:" -ForegroundColor Yellow
   $ips = @()
@@ -72,7 +76,7 @@ try {
   if ($ips.Count -eq 0) {
     Write-Host "AVISO: nao consegui detectar um IPv4 da rede. Verifique se o computador esta conectado ao Wi-Fi ou cabo." -ForegroundColor Yellow
   } else {
-    foreach ($ip in $ips) { Write-Host ("Recepcao: http://{0}:{1}/" -f $ip, $Port); Write-Host ("Sala:     http://{0}:{1}/sala" -f $ip, $Port); Write-Host ("Profissional: http://{0}:{1}/consultorio" -f $ip, $Port) }
+    foreach ($ip in $ips) { Write-Host ("Recepcao: http://{0}:{1}/" -f $ip, $Port); Write-Host ("Sala:     http://{0}:{1}/sala" -f $ip, $Port); Write-Host ("Profissional: http://{0}:{1}/consultorio" -f $ip, $Port); Write-Host ("Agenda: http://{0}:{1}/agenda" -f $ip, $Port); Write-Host ("Financeiro: http://{0}:{1}/financeiro" -f $ip, $Port) }
   }
   # Abre automaticamente o sistema no navegador da recepcao.
   try { Start-Process ("http://127.0.0.1:{0}/" -f $Port) } catch { Write-Host "Abra manualmente o endereco local mostrado acima." -ForegroundColor Yellow }
@@ -221,7 +225,7 @@ try {
           try {
             $parsed = ConvertFrom-Json -InputObject $json
             if ($parsed -isnot [System.Array] -and $null -ne $parsed) { throw "Expected JSON array" }
-            [System.IO.File]::WriteAllText($DataFile, $json, $Utf8NoBom)
+            Write-JsonAtomically -Path $DataFile -Json $json
             $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"ok":true}'); $type = "application/json; charset=utf-8"
           } catch { $status = "400 Bad Request"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"error":"invalid JSON"}'); $type = "application/json; charset=utf-8" }
         }
