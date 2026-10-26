@@ -1,14 +1,17 @@
 # Markys SGA Odonto — Gestão de fila odontológica para Windows
 
-Aplicação local para organizar a recepção, a sala de espera e os consultórios de uma clínica odontológica. Esta etapa aproveita o fluxo existente de fila compartilhada, chamadas por voz e acompanhamento de atendimento. **Ainda não substitui um prontuário odontológico completo**: foi adicionado um módulo inicial com anamnese, odontograma FDI, evolução e plano de tratamento, mas faltam revisão clínica, anexos clínicos integrados, orçamento, financeiro, autenticação e validação antes de qualquer uso real.
+Aplicação local para organizar a recepção, a sala de espera e os consultórios de uma clínica odontológica. Esta etapa aproveita o fluxo existente de fila compartilhada, chamadas por voz e acompanhamento de atendimento. **Ainda não substitui um prontuário odontológico completo**: foi adicionado um módulo inicial com anamnese, odontograma FDI, evolução e plano de tratamento, mas faltam revisão clínica, anexos clínicos integrados, integração de orçamento ao financeiro, autenticação e validação antes de qualquer uso real.
 
 ## Estrutura
 - `index.html`: recepção e painel público da sala de espera.
 - `consultorio.html`: painel da equipe clínica.
 - `prontuario.html`: módulo inicial de prontuário, anamnese, odontograma FDI, evolução e plano de tratamento.
+- `agenda.html`: agenda odontológica inicial, com agendamentos, profissional, consultório e status.
+- `financeiro.html`: lançamentos financeiros iniciais, cobranças, recebimentos, despesas e exportação CSV.
 - `logo-favmed.png`: logotipo atual (pode ser substituído pelo logotipo da clínica odontológica).
 - `servidor-favmed.ps1`: servidor HTTP local para Windows PowerShell 5.1+.
 - `fila.json`: dados operacionais locais, criado automaticamente.
+- `agenda.json` e `financeiro.json`: dados da agenda e dos lançamentos financeiros, criados automaticamente.
 - `midia.json` e `midia-sala/`: configuração e arquivos opcionais da tela de espera.
 - `documentos-pacientes/`: PDFs anexados, armazenados no computador servidor.
 - `INICIAR-SERVIDOR-FAVMED.bat`: inicialização do servidor.
@@ -18,7 +21,7 @@ Aplicação local para organizar a recepção, a sala de espera e os consultóri
 1. Baixe o ZIP da branch `adaptacao-odontologia` e extraia para uma pasta permanente no computador servidor.
 2. Execute `INICIAR-SERVIDOR-FAVMED.bat`.
 3. Use os endereços e a porta mostrados pela janela do servidor. A configuração atual tenta a porta TCP `2222`; se estiver ocupada, o servidor encerra com aviso.
-4. O módulo clínico fica em `/prontuario` e o painel da equipe em `/consultorio`.
+4. O módulo clínico fica em `/prontuario`, a agenda em `/agenda`, o financeiro em `/financeiro` e o painel da equipe em `/consultorio`.
 5. Para acessar de outros dispositivos, use o endereço IPv4 do computador servidor e a mesma porta, na mesma rede local.
 
 ## Escopo atual herdado
