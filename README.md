@@ -1,45 +1,38 @@
-# FAVMED Local — Chamador de pacientes para Windows
+# Markys SGA Odonto — Gestão de fila odontológica para Windows
 
-Aplicativo local da Clínica Favmed para recepção, sala de espera e profissionais. Compartilha a fila entre dispositivos da mesma rede local, usando o PowerShell incluído no Windows; não exige Node.js nem instalar programas adicionais.
+Aplicação local para organizar a recepção, a sala de espera e os consultórios de uma clínica odontológica. Esta etapa aproveita o fluxo existente de fila compartilhada, chamadas por voz e acompanhamento de atendimento. **Ainda não substitui um prontuário odontológico completo**: odontograma, anamnese clínica, plano de tratamento, orçamento e financeiro precisam ser implementados e validados antes de uso clínico.
 
-## Arquivos principais
+## Estrutura
 - `index.html`: recepção e painel público da sala de espera.
-- `consultorio.html`: painel do profissional para chamar, iniciar e liberar cada serviço.
-- `logo-favmed.png`: logotipo da clínica.
-- `servidor-favmed.ps1`: servidor local e armazenamento compartilhado.
-- `fila.json`: dados operacionais locais (criado ao iniciar o servidor).
-- `documentos-pacientes/`: PDFs anexados aos cadastros; a pasta é criada automaticamente no computador que executa o servidor.
-- `INICIAR-SERVIDOR-FAVMED.bat`: inicia o servidor.
-- `INSTRUCOES-REDE-LOCAL.txt`: instruções completas de configuração e uso.
+- `consultorio.html`: painel da equipe clínica.
+- `logo-favmed.png`: logotipo atual (pode ser substituído pelo logotipo da clínica odontológica).
+- `servidor-favmed.ps1`: servidor HTTP local para Windows PowerShell 5.1+.
+- `fila.json`: dados operacionais locais, criado automaticamente.
+- `midia.json` e `midia-sala/`: configuração e arquivos opcionais da tela de espera.
+- `documentos-pacientes/`: PDFs anexados, armazenados no computador servidor.
+- `INICIAR-SERVIDOR-FAVMED.bat`: inicialização do servidor.
+- `INSTRUCOES-REDE-LOCAL.txt`: configuração da rede local.
 
-## Início rápido
-1. Baixe o ZIP da branch `main` deste repositório e extraia em uma pasta permanente.
-2. Execute `INICIAR-SERVIDOR-FAVMED.bat` no computador principal.
-3. Use os links exibidos na janela do servidor:
-   - Recepção: `http://IP:PORTA/`
-   - Sala de espera: `http://IP:PORTA/?painel=1`
-   - Profissional: `http://IP:PORTA/consultorio`
-4. Para acesso remoto, os dispositivos devem estar na mesma rede local. Mantenha o servidor aberto.
+## Executar
+1. Baixe o ZIP da branch `adaptacao-odontologia` e extraia para uma pasta permanente no computador servidor.
+2. Execute `INICIAR-SERVIDOR-FAVMED.bat`.
+3. Use os endereços e a porta mostrados pela janela do servidor. A configuração atual tenta a porta TCP `2222`; se estiver ocupada, o servidor encerra com aviso.
+4. Para acessar de outros dispositivos, use o endereço IPv4 do computador servidor e a mesma porta, na mesma rede local.
 
-## Recursos incorporados do fluxo MARKYS
-- Cadastro com múltiplos serviços por paciente e consultório opcional.
-- Nome do paciente em letras maiúsculas, edição de nome e serviços, prioridade e busca.
-- Painel profissional separado: “Chamar na sala”, “Atender”, “Cancelar chamado” e “Liberar”.
-- Status por serviço; o paciente só é concluído quando todos os serviços forem liberados.
-- Horário de saída, retenção de atendidos na recepção e opção para reabrir.
-- Tela pública com chamada atual e próximos pacientes, sem mostrar atendimentos concluídos.
-- Anúncio por voz com seleção automática/manual de voz disponível, teste e repetição.
-- Exportação CSV, relatório PDF A4 vertical e backup JSON.
-- Atualização automática entre recepção, painel profissional e sala de espera.
-- Chamadas da recepção para Recepção 1, 2 e 3; marcador de ASO pendente; anexos PDF opcionais de até 10 MB.
-- Exames específicos adicionais de laboratório e exames complementares.
-- Mantém a identidade visual da Favmed (branco, cinza-claro e azul-petróleo).
+## Escopo atual herdado
+O projeto original oferece cadastro operacional, fila por sala/serviço, chamadas, status por atendimento, atualização entre telas, exportação e backup. Esses recursos precisam passar por testes de regressão após a adaptação odontológica.
 
-## Segurança e limitações
-- O computador principal precisa ficar ligado com o servidor PowerShell aberto.
-- A versão de rede usa HTTP local, sem login nem criptografia. Use somente rede interna confiável; não use Wi-Fi de visitantes nem exponha a porta à internet.
-- A tela pública exibe nomes e atendimentos. Não inclua diagnósticos, CPF ou informações clínicas.
-- O arquivo `local\\fila.json` contém registros operacionais; proteja a pasta e faça backups.
-- A voz depende das vozes disponibilizadas pelo Chrome/Windows; voz feminina neural não é garantida.
+## Antes de usar com pacientes reais
+- A versão atual não oferece autenticação nem criptografia; não a exponha à internet nem a redes Wi-Fi públicas.
+- Dados de saúde são sensíveis. Restrinja o acesso ao computador e à pasta de dados, mantenha backups protegidos e não coloque dados reais em commits ou no GitHub.
+- Não use a fila como substituto do prontuário clínico oficial. Registre procedimentos, evolução e documentos em sistema adequado até que os módulos odontológicos sejam desenvolvidos e validados.
+- Não considere este software, por si só, como garantia de conformidade com a LGPD ou com normas profissionais.
 
-Crédito: Desenvolvido por Daniel Marques via IA.
+## Próximas etapas recomendadas
+1. Corrigir e testar o servidor e as rotas de recepção/consultório.
+2. Adaptar os cadastros para agenda, dentista, cadeira e tipo de consulta.
+3. Criar prontuário odontológico com anamnese, odontograma por dente/face, evolução e anexos.
+4. Ligar plano de tratamento e orçamento ao financeiro.
+5. Implementar autenticação, perfis de acesso, trilha de auditoria e backup protegido.
+6. Testar com dados fictícios antes de qualquer uso real.
+
