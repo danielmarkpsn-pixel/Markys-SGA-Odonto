@@ -92,5 +92,4 @@ $('list').addEventListener('click',async e=>{const b=e.target.closest('button');
 if(b.dataset.delete){if(!confirm('Excluir este agendamento?'))return;appointments=appointments.filter(x=>String(x.id)!==String(a.id))}else if(b.dataset.status){a.status=b.dataset.status;a.updatedAt=new Date().toISOString()}else return;try{await persist();render();notify('Agenda atualizada.')}catch(err){notify(err.message);await load()}});
 $('date').value=today();$('filterDate').value=today();load();
 })();
-</script><script>document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("header nav a").forEach(function(a){if(new URL(a.href,location.href).pathname.replace(/\\/$/,"")==="undefined")a.classList.add("active");});});</script>
-</body></html>
+</script></body></html>
