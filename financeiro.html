@@ -83,5 +83,4 @@ if(b.dataset.delete){if(!confirm('Excluir este lançamento financeiro?'))return;
 $('exportCsv').addEventListener('click',()=>{const month=$('filterMonth').value||monthNow();const rows=[['Data','Tipo','Descrição','Categoria','Paciente','Valor','Situação','Forma','Vencimento','Observações'],...entries.filter(x=>(x.date||'').slice(0,7)===month).map(x=>[x.date,x.kind,x.description,x.category,x.patientName,x.amount,x.status,x.method,x.dueDate,x.notes])];const csv=rows.map(row=>row.map(v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"').join(';')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='markys-financeiro-'+month+'.csv';a.click();URL.revokeObjectURL(url)});
 $('date').value=today();$('filterMonth').value=monthNow();load();
 })();
-</script><script>document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("header nav a").forEach(function(a){if(new URL(a.href,location.href).pathname.replace(/\\/$/,"")==="undefined")a.classList.add("active");});});</script>
-</body></html>
+</script></body></html>
