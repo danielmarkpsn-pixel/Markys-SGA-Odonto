@@ -165,5 +165,6 @@ window.addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.return
 loadPatients(false);
 })();
 </script>
-<script>document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("header nav a").forEach(function(a){if(new URL(a.href,location.href).pathname.replace(/\\/$/,"")==="/prontuario")a.classList.add("active");});});</script>\n</body>
+<script>document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("header nav a").forEach(function(a){if(new URL(a.href,location.href).pathname.replace(/\\/$/,"")==="undefined")a.classList.add("active");});});</script>
+</body>
 </html>
