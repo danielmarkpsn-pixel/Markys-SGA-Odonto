@@ -16,7 +16,40 @@ header{background:rgba(255,255,255,.96);border-bottom-color:#dcebe0}
 .panel,.stat,.patient,.summary,.patient-picker{border-color:#dcebe0}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #9cddb4;outline-offset:2px}
 ::selection{background:#ccefd8;color:#075333}
-</style>
+/* Redesign Markys SGA Odonto — branco + verde, inspirado nas referências */
+:root{color-scheme:light;--bg:#f3f8f5;--panel:#fff;--line:#dcebe2;--text:#123f2f;--muted:#6a8377;--teal:#078e54;--teal2:#006b42;--teal-dark:#004c35;--green:#078e54;--blue:#078e54}
+body:not(.public-mode){background:linear-gradient(135deg,#f4faf6,#edf7f1 48%,#f9fcfa);color:#123f2f}
+body:not(.public-mode) header{position:fixed;z-index:30;left:0;top:0;bottom:0;width:228px;height:100dvh;min-height:100vh;margin:0;padding:22px 14px;background:linear-gradient(165deg,#00563b,#00432f 58%,#003b2b);border:0;border-radius:0;box-shadow:8px 0 28px #003d2b16;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:24px;overflow-y:auto;color:#fff}
+body:not(.public-mode) header .brand{gap:10px;align-items:center;color:#fff}
+body:not(.public-mode) header .brand img{width:42px;height:42px;filter:brightness(0) invert(1)}
+body:not(.public-mode) header .brand h1{font-size:17px;line-height:1.2;color:#fff;letter-spacing:-.2px}
+body:not(.public-mode) header .brand p{font-size:11px;color:#c5e5d5}
+body:not(.public-mode) header nav{display:flex!important;flex-direction:column;align-items:stretch;gap:6px;width:100%;margin-top:6px}
+body:not(.public-mode) header nav a{justify-content:flex-start;text-align:left;padding:11px 12px;border-radius:9px;border:1px solid transparent;background:transparent;color:#e2f5e9;font-size:12px;min-height:40px}
+body:not(.public-mode) header nav a:hover{background:#ffffff14}
+body:not(.public-mode) header nav a.active{background:linear-gradient(100deg,#0ba66a,#078954);color:#fff;box-shadow:0 5px 14px #001e1530}
+body:not(.public-mode) header .datebox{color:#c5e5d5;text-align:left;margin-top:auto;padding-top:18px;border-top:1px solid #ffffff32}
+body:not(.public-mode) main{margin-left:228px;max-width:none;width:auto;padding:30px clamp(18px,3vw,42px) 42px}
+body:not(.public-mode) .title,body:not(.public-mode) .hero{margin-bottom:22px}
+body:not(.public-mode) .eyebrow{color:#078e54}
+body:not(.public-mode) .panel,body:not(.public-mode) .stat{border:1px solid #dcebe2;border-radius:14px;background:rgba(255,255,255,.96);box-shadow:0 8px 26px #164a3210}
+body:not(.public-mode) .panel h3{color:#114b35}
+body:not(.public-mode) .field input,body:not(.public-mode) .field select,body:not(.public-mode) .field textarea,body:not(.public-mode) input.search{border-color:#d5e6dc;border-radius:8px;background:#fff}
+body:not(.public-mode) .btn.primary,body:not(.public-mode) .btn.blue,body:not(.public-mode) .primary{background:linear-gradient(100deg,#078b53,#06a365);color:#fff;border-color:transparent}
+body:not(.public-mode) .btn.secondary,body:not(.public-mode) .btn.gray{background:#eef7f1;color:#15523a;border-color:#d9e9df}
+body:not(.public-mode) .appointment,body:not(.public-mode) .entry,body:not(.public-mode) .patient{border-color:#e0eee5;border-radius:10px}
+body:not(.public-mode) table th{color:#668373}
+body:not(.public-mode) table td{border-bottom-color:#e7f0ea}
+body:not(.public-mode) .toast{background:#07583c;color:#fff}
+.markys-sidebar{display:none}
+body:not(.public-mode) .markys-sidebar{position:fixed;z-index:40;inset:0 auto 0 0;width:228px;padding:20px 14px;background:linear-gradient(165deg,#00563b,#00432f 60%,#003b2b);color:#fff;display:flex;flex-direction:column;gap:24px;box-shadow:8px 0 28px #003d2b16}
+.markys-sidebrand{display:flex;align-items:center;gap:9px;padding:4px 8px 18px;color:#fff;text-decoration:none;border-bottom:1px solid #ffffff30}
+.markys-sidebrand img{width:39px;height:39px;object-fit:contain;filter:brightness(0) invert(1)}
+.markys-sidebrand strong,.markys-sidebrand small{display:block}.markys-sidebrand strong{font-size:17px;line-height:1.1}.markys-sidebrand small{font-size:10px;color:#c9e8d8;margin-top:3px}
+.markys-sidebar nav{display:flex;flex-direction:column;gap:6px}.markys-sidebar nav a{display:flex;align-items:center;gap:12px;padding:11px 12px;color:#e4f5eb;text-decoration:none;border-radius:9px;font-size:12px;font-weight:650}.markys-sidebar nav a:hover,.markys-sidebar nav a.active{background:linear-gradient(100deg,#0ba66a,#078954);color:#fff}
+.markys-sidebar-foot{display:flex;align-items:center;gap:9px;margin-top:auto;border-top:1px solid #ffffff30;padding:16px 8px 4px;color:#c7e6d6;font-size:10px;line-height:1.5}.markys-sidebar-foot i{width:9px;height:9px;background:#2fc878;border-radius:50%;box-shadow:0 0 0 4px #2fc87820}
+@media(max-width:760px){body:not(.public-mode) header{position:relative;inset:auto;width:auto;height:auto;min-height:0;padding:12px 14px;border-radius:0;flex-direction:row;align-items:center;gap:10px}body:not(.public-mode) header .brand{display:flex}body:not(.public-mode) header nav{flex-direction:row;flex-wrap:wrap;margin:0}body:not(.public-mode) header nav a{flex:1 1 auto;justify-content:center;padding:8px}body:not(.public-mode) main{margin-left:0;padding:18px 12px 28px}body:not(.public-mode) .markys-sidebar{display:none}}
+\n</style>
 </head>
 <body>
 <header><div class="brand"><img src="logo-odontologia.svg" alt="Markys SGA Odonto"><div><h1>Markys SGA Odonto</h1><p>Painel do consultório · Odontologia</p></div></div><nav style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn gray" href="/">Recepção</a><a class="btn blue" href="/prontuario">Prontuário odontológico</a><a class="btn gray" href="/agenda">Agenda</a><a class="btn gray" href="/financeiro">Financeiro</a></nav></header>
@@ -72,7 +105,7 @@ function exportProfessionalDashboard(){
  a.download="favmed-dashboard-profissional-"+(selected==="__all__"?"todas-as-salas":selected.replace(/[^a-z0-9]+/gi,"-").toLowerCase())+"-"+today+".xlsx";
  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
 }
-$("exportProfessionalCsv").addEventListener("click",exportProfessionalDashboard);$("service").addEventListener("change",render);$("patientSearch").addEventListener("input",render);$("list").addEventListener("click",e=>{const b=e.target.closest("button[data-action]");if(!b)return;if(b.dataset.action==="ficha"){const p=patients.find(x=>String(x.id)===String(b.dataset.id));if(p)showFicha(p);return;}mutate(b.dataset.id,b.dataset.action,b.dataset.service);});function showFicha(p){const examRows=Object.entries(p.examsByRoom||{}).filter(([,v])=>v&&v.length).map(([r,v])=>r+": "+v.join(", ")).join("\n")||"Não informado",content="Nome: "+(p.name||"—")+"\nCPF: "+(p.cpf||"—")+"\nData de nascimento: "+(p.birthDate||"—")+"\nConvênio: "+(p.insurance||"—")+"\nFunção: "+(p.job||"—")+"\nTipo de atendimento: "+((p.examTypes||[]).join(", ")||"—")+"\nSalas: "+(Array.isArray(p.rooms)?p.rooms.join(", "):p.room||"—")+"\nExames selecionados:\n"+examRows;const w=window.open("","_blank");if(!w){alert("Permita pop-ups para visualizar a ficha.");return;}const safe=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));w.document.write("<!doctype html><html lang='pt-BR'><head><meta charset='utf-8'><title>Ficha - "+safe(p.name||"Paciente")+"</title><style>@page{size:A4 portrait;margin:18mm}body{font:15px Arial;color:#20313a;line-height:1.6}h1{color:#138a52}section{border:1px solid #dce5e9;border-radius:10px;padding:20px;white-space:pre-line}</style></head><body><button onclick='print()'>Imprimir / Salvar em PDF</button><h1>Markys SGA Odonto — Ficha do paciente</h1><section>"+safe(content)+"</section></body></html>");w.document.close();}load();setInterval(load,1500);
+$("exportProfessionalCsv").addEventListener("click",exportProfessionalDashboard);$("service").addEventListener("change",render);$("patientSearch").addEventListener("input",render);$("list").addEventListener("click",e=>{const b=e.target.closest("button[data-action]");if(!b)return;if(b.dataset.action==="ficha"){const p=patients.find(x=>String(x.id)===String(b.dataset.id));if(p)showFicha(p);return;}mutate(b.dataset.id,b.dataset.action,b.dataset.service);});function showFicha(p){const examRows=Object.entries(p.examsByRoom||{}).filter(([,v])=>v&&v.length).map(([r,v])=>r+": "+v.join(", ")).join("\n")||"Não informado",content="Nome: "+(p.name||"—")+"\nCPF: "+(p.cpf||"—")+"\nData de nascimento: "+(p.birthDate||"—")+"\nConvênio: "+(p.insurance||"—")+"\nFunção: "+(p.job||"—")+"\nTipo de atendimento: "+((p.examTypes||[]).join(", ")||"—")+"\nSalas: "+(Array.isArray(p.rooms)?p.rooms.join(", "):p.room||"—")+"\nExames selecionados:\n"+examRows;const w=window.open("","_blank");if(!w){alert("Permita pop-ups para visualizar a ficha.");return;}const safe=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));w.document.write("<!doctype html><html lang='pt-BR'><head><meta charset='utf-8'><title>Ficha - "+safe(p.name||"Paciente")+"</title><style>@page{size:A4 portrait;margin:18mm}body{font:15px Arial;color:#20313a;line-height:1.6}h1{color:#138a52}section{border:1px solid #dce5e9;border-radius:10px;padding:20px;white-space:pre-line}</style></head><body><button onclick='print()'>Imprimir / Salvar em PDF</button><h1>Markys SGA Odonto — Ficha do paciente</h1><section>"+safe(content)+"</section><script>document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("header nav a").forEach(function(a){if(new URL(a.href,location.href).pathname.replace(/\\/$/,"")==="/consultorio")a.classList.add("active");});});</script>\n</body></html>");w.document.close();}load();setInterval(load,1500);
 })();
 </script>
 </body>
