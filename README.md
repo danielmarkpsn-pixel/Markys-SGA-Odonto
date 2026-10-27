@@ -8,7 +8,7 @@ Aplicação local para organizar a recepção, a sala de espera e os consultóri
 - `prontuario.html`: módulo inicial de prontuário, anamnese, odontograma FDI, evolução e plano de tratamento.
 - `agenda.html`: agenda odontológica inicial, com agendamentos, profissional, consultório e status.
 - `financeiro.html`: lançamentos financeiros iniciais, cobranças, recebimentos, despesas e exportação CSV.
-- `logo-favmed.png`: logotipo atual (pode ser substituído pelo logotipo da clínica odontológica).
+- `logo-odontologia.svg`: símbolo odontológico vetorial da marca, em verde e branco.
 - `servidor-favmed.ps1`: servidor HTTP local para Windows PowerShell 5.1+.
 - `fila.json`: dados operacionais locais, criado automaticamente.
 - `agenda.json` e `financeiro.json`: dados da agenda e dos lançamentos financeiros, criados automaticamente.
