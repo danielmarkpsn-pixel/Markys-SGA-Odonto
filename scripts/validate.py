@@ -15,6 +15,7 @@ REQUIRED = [
     "INICIAR-SERVIDOR-FAVMED.bat",
     "INSTRUCOES-REDE-LOCAL.txt",
     "README.md",
+    "logo-odontologia.svg",
 ]
 missing = [name for name in REQUIRED if not (ROOT / name).is_file()]
 if missing:
@@ -65,4 +66,14 @@ if failed:
 for name in checks:
     print(f"OK: integração {name}")
 
+logo = (ROOT / "logo-odontologia.svg").read_text(encoding="utf-8")
+if "<svg" not in logo or "#138a52" not in logo:
+    print("O símbolo odontológico SVG não parece válido ou não usa a identidade verde.", file=sys.stderr)
+    sys.exit(1)
+for name in ("index.html", "consultorio.html", "prontuario.html", "agenda.html", "financeiro.html"):
+    source = (ROOT / name).read_text(encoding="utf-8")
+    if "logo-odontologia.svg" not in source:
+        print(f"Logo odontológica não referenciada em {name}", file=sys.stderr)
+        sys.exit(1)
+print("OK: símbolo odontológico e referências da marca.")
 print("OK: arquivos obrigatórios presentes.")
