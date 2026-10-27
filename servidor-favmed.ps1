@@ -149,7 +149,7 @@ try {
           $filePath = Join-Path $SlideshowDir $safeName
           if ([string]::IsNullOrWhiteSpace($safeName) -or -not (Test-Path -LiteralPath $filePath -PathType Leaf)) { throw "Not found" }
           $ext = [System.IO.Path]::GetExtension($safeName).ToLowerInvariant()
-          $mime = @{ ".jpg"="image/jpeg"; ".jpeg"="image/jpeg"; ".png"="image/png"; ".gif"="image/gif"; ".webp"="image/webp"; ".bmp"="image/bmp"; ".mp4"="video/mp4"; ".webm"="video/webm"; ".ogg"="video/ogg"; ".mov"="video/quicktime"; ".m4v"="video/mp4" }
+          $mime = @{ ".jpg"="image/jpeg"; ".jpeg"="image/jpeg"; ".png"="image/png"; ".svg"="image/svg+xml; charset=utf-8"; ".gif"="image/gif"; ".webp"="image/webp"; ".bmp"="image/bmp"; ".mp4"="video/mp4"; ".webm"="video/webm"; ".ogg"="video/ogg"; ".mov"="video/quicktime"; ".m4v"="video/mp4" }
           $type = $mime[$ext]
           if (-not $type) { throw "Unsupported media type" }
           $responseBytes = [System.IO.File]::ReadAllBytes($filePath)
@@ -241,8 +241,8 @@ try {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "agenda.html")); $type = "text/html; charset=utf-8"
       } elseif ($path -eq "/financeiro" -or $path -eq "/financeiro.html") {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "financeiro.html")); $type = "text/html; charset=utf-8"
-      } elseif ($path -eq "/logo-favmed.png" -and (Test-Path (Join-Path $Root "logo-favmed.png"))) {
-        $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "logo-favmed.png")); $type = "image/png"
+      } elseif ($path -eq "/logo-odontologia.svg" -and (Test-Path (Join-Path $Root "logo-odontologia.svg"))) {
+        $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "logo-odontologia.svg")); $type = "image/svg+xml; charset=utf-8"
       } elseif ($path -eq "/chamador.mp3" -and (Test-Path (Join-Path $Root "chamador.mp3"))) {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "chamador.mp3")); $type = "audio/mpeg"
       } elseif ($path -eq "/sala-espera") {
