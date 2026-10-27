@@ -452,6 +452,5 @@ if(publicMode){document.addEventListener("pointerdown",unlockCallAudio);document
 else{load().then(()=>{render();renderPublic();});setInterval(()=>{load().then(()=>{render();renderPublic();});},1800);const opener=$("openDisplay");if(opener)opener.addEventListener("click",()=>{const display=window.open(new URL("/sala",location.origin).href,"favmedSalaEspera");if(!display)notify("O navegador bloqueou a janela. Permita pop-ups para este arquivo e tente novamente.");});}
 })();
 </script>
-<script>document.addEventListener("DOMContentLoaded",function(){var p=location.pathname.replace(/\\/$/,"")||"/";document.querySelectorAll(".markys-sidebar nav a").forEach(function(a){if(a.dataset.route===p)a.classList.add("active");});});</script>
 </body>
 </html>
