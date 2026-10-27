@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+<title id="title">Markys SGA Odonto</title><desc id="desc">Símbolo odontológico verde, com dente estilizado e traço curvo de sorriso.</desc>
+<defs><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#138a52"/><stop offset="1" stop-color="#00583b"/></linearGradient></defs>
+<path d="M37 17C20 19 13 35 19 54c4 13 11 20 14 34 2 11 5 23 12 23 8 0 9-18 15-26 2-3 5-3 7 0 6 8 7 26 15 26 7 0 10-12 12-23 3-14 10-21 14-34 5-18-2-34-19-37-10-2-18 3-28 8-9-5-17-10-24-8Z" fill="none" stroke="url(#leaf)" stroke-width="7" stroke-linejoin="round"/>
+<path d="M9 78C31 91 58 87 84 72c15-9 25-19 33-31" fill="none" stroke="url(#leaf)" stroke-width="8" stroke-linecap="round"/>
+<path d="M71 19c13-7 25-3 30 7 5 10-2 21-13 27" fill="none" stroke="#08764d" stroke-width="5" stroke-linecap="round"/>
+</svg>

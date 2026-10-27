@@ -54,18 +54,21 @@ jobs:
           $files = @(
             "index.html",
             "consultorio.html",
+            "prontuario.html",
+            "agenda.html",
+            "financeiro.html",
             "servidor-favmed.ps1",
             "INICIAR-SERVIDOR-FAVMED.bat",
             "INSTRUCOES-REDE-LOCAL.txt",
             "README.md",
-            "logo-favmed.png"
+            "logo-odontologia.svg"
           )
           foreach ($file in $files) {
             if (Test-Path $file -PathType Leaf) {
               Copy-Item $file -Destination $stage
             }
           }
-          if (-not (Test-Path (Join-Path $stage "logo-favmed.png"))) {
+          if (-not (Test-Path (Join-Path $stage "logo-odontologia.svg"))) {
             Write-Error "O arquivo de logo referenciado pelas telas não foi encontrado."
             exit 1
           }

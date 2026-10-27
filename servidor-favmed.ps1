@@ -4,6 +4,8 @@ $Port = 2222
 $PortCandidates = @(2222)
 $Root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $DataFile = Join-Path $Root "fila.json"
+$AppointmentsFile = Join-Path $Root "agenda.json"
+$FinanceFile = Join-Path $Root "financeiro.json"
 $MediaFile = Join-Path $Root "midia.json"
 $SlideshowDir = Join-Path $Root "midia-sala"
 $DocumentsDir = Join-Path $Root "documentos-pacientes"
@@ -11,6 +13,18 @@ if (-not (Test-Path $DocumentsDir)) { New-Item -ItemType Directory -Path $Docume
 if (-not (Test-Path $SlideshowDir)) { New-Item -ItemType Directory -Path $SlideshowDir | Out-Null }
 $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 if (-not (Test-Path $DataFile)) { [System.IO.File]::WriteAllText($DataFile, "[]", $Utf8NoBom) }
+if (-not (Test-Path $AppointmentsFile)) { [System.IO.File]::WriteAllText($AppointmentsFile, "[]", $Utf8NoBom) }
+if (-not (Test-Path $FinanceFile)) { [System.IO.File]::WriteAllText($FinanceFile, "[]", $Utf8NoBom) }
+function Write-JsonAtomically([string]$Path, [string]$Json) {
+  $tempPath = $Path + "." + [Guid]::NewGuid().ToString("N") + ".tmp"
+  try {
+    [System.IO.File]::WriteAllText($tempPath, $Json, $Utf8NoBom)
+    if (Test-Path -LiteralPath $Path) {
+      try { [System.IO.File]::Replace($tempPath, $Path, $null) }
+      catch { Move-Item -LiteralPath $tempPath -Destination $Path -Force }
+    } else { [System.IO.File]::Move($tempPath, $Path) }
+  } finally { if (Test-Path -LiteralPath $tempPath) { Remove-Item -LiteralPath $tempPath -Force -ErrorAction SilentlyContinue } }
+}
 if (-not (Test-Path $MediaFile)) { [System.IO.File]::WriteAllText($MediaFile, '{"url":""}', $Utf8NoBom) }
 $listener = $null
 foreach ($candidatePort in $PortCandidates) {
@@ -37,6 +51,8 @@ try {
   Write-Host "Recepcao: http://127.0.0.1:$Port/"
   Write-Host "Tela sala de espera: http://127.0.0.1:$Port/sala"
   Write-Host "Painel do profissional: http://127.0.0.1:$Port/consultorio"
+  Write-Host "Agenda odontologica: http://127.0.0.1:$Port/agenda"
+  Write-Host "Financeiro: http://127.0.0.1:$Port/financeiro"
   Write-Host ""
   Write-Host "Enderecos para outros dispositivos:" -ForegroundColor Yellow
   $ips = @()
@@ -60,7 +76,7 @@ try {
   if ($ips.Count -eq 0) {
     Write-Host "AVISO: nao consegui detectar um IPv4 da rede. Verifique se o computador esta conectado ao Wi-Fi ou cabo." -ForegroundColor Yellow
   } else {
-    foreach ($ip in $ips) { Write-Host ("Recepcao: http://{0}:{1}/" -f $ip, $Port); Write-Host ("Sala:     http://{0}:{1}/sala" -f $ip, $Port); Write-Host ("Profissional: http://{0}:{1}/consultorio" -f $ip, $Port) }
+    foreach ($ip in $ips) { Write-Host ("Recepcao: http://{0}:{1}/" -f $ip, $Port); Write-Host ("Sala:     http://{0}:{1}/sala" -f $ip, $Port); Write-Host ("Profissional: http://{0}:{1}/consultorio" -f $ip, $Port); Write-Host ("Agenda: http://{0}:{1}/agenda" -f $ip, $Port); Write-Host ("Financeiro: http://{0}:{1}/financeiro" -f $ip, $Port) }
   }
   # Abre automaticamente o sistema no navegador da recepcao.
   try { Start-Process ("http://127.0.0.1:{0}/" -f $Port) } catch { Write-Host "Abra manualmente o endereco local mostrado acima." -ForegroundColor Yellow }
@@ -133,7 +149,7 @@ try {
           $filePath = Join-Path $SlideshowDir $safeName
           if ([string]::IsNullOrWhiteSpace($safeName) -or -not (Test-Path -LiteralPath $filePath -PathType Leaf)) { throw "Not found" }
           $ext = [System.IO.Path]::GetExtension($safeName).ToLowerInvariant()
-          $mime = @{ ".jpg"="image/jpeg"; ".jpeg"="image/jpeg"; ".png"="image/png"; ".gif"="image/gif"; ".webp"="image/webp"; ".bmp"="image/bmp"; ".mp4"="video/mp4"; ".webm"="video/webm"; ".ogg"="video/ogg"; ".mov"="video/quicktime"; ".m4v"="video/mp4" }
+          $mime = @{ ".jpg"="image/jpeg"; ".jpeg"="image/jpeg"; ".png"="image/png"; ".svg"="image/svg+xml; charset=utf-8"; ".gif"="image/gif"; ".webp"="image/webp"; ".bmp"="image/bmp"; ".mp4"="video/mp4"; ".webm"="video/webm"; ".ogg"="video/ogg"; ".mov"="video/quicktime"; ".m4v"="video/mp4" }
           $type = $mime[$ext]
           if (-not $type) { throw "Unsupported media type" }
           $responseBytes = [System.IO.File]::ReadAllBytes($filePath)
@@ -174,6 +190,32 @@ try {
           if (-not (Test-Path -LiteralPath $docPath -PathType Leaf)) { throw "Not found" }
           $responseBytes = [System.IO.File]::ReadAllBytes($docPath); $type = "application/pdf"
         } catch { $status = "404 Not Found"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes("Documento não encontrado") }
+      } elseif ($path -eq "/api/appointments" -and $method -eq "GET") {
+        $responseBytes = [System.IO.File]::ReadAllBytes($AppointmentsFile); $type = "application/json; charset=utf-8"
+      } elseif ($path -eq "/api/appointments" -and $method -eq "POST") {
+        if ($contentLength -gt 2097152 -or $read -ne $contentLength) { $status = "413 Payload Too Large"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes("Payload too large") }
+        else {
+          $json = [System.Text.Encoding]::UTF8.GetString($bodyBytes)
+          try {
+            $parsed = ConvertFrom-Json -InputObject $json
+            if ($parsed -isnot [System.Array] -and $null -ne $parsed) { throw "Expected JSON array" }
+            Write-JsonAtomically -Path $AppointmentsFile -Json $json
+            $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"ok":true}'); $type = "application/json; charset=utf-8"
+          } catch { $status = "400 Bad Request"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"error":"invalid JSON"}'); $type = "application/json; charset=utf-8" }
+        }
+      } elseif ($path -eq "/api/finance" -and $method -eq "GET") {
+        $responseBytes = [System.IO.File]::ReadAllBytes($FinanceFile); $type = "application/json; charset=utf-8"
+      } elseif ($path -eq "/api/finance" -and $method -eq "POST") {
+        if ($contentLength -gt 2097152 -or $read -ne $contentLength) { $status = "413 Payload Too Large"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes("Payload too large") }
+        else {
+          $json = [System.Text.Encoding]::UTF8.GetString($bodyBytes)
+          try {
+            $parsed = ConvertFrom-Json -InputObject $json
+            if ($parsed -isnot [System.Array] -and $null -ne $parsed) { throw "Expected JSON array" }
+            Write-JsonAtomically -Path $FinanceFile -Json $json
+            $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"ok":true}'); $type = "application/json; charset=utf-8"
+          } catch { $status = "400 Bad Request"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"error":"invalid JSON"}'); $type = "application/json; charset=utf-8" }
+        }
       } elseif ($path -eq "/api/state" -and $method -eq "GET") {
         $responseBytes = [System.IO.File]::ReadAllBytes($DataFile); $type = "application/json; charset=utf-8"
       } elseif ($path -eq "/api/state" -and $method -eq "POST") {
@@ -183,7 +225,7 @@ try {
           try {
             $parsed = ConvertFrom-Json -InputObject $json
             if ($parsed -isnot [System.Array] -and $null -ne $parsed) { throw "Expected JSON array" }
-            [System.IO.File]::WriteAllText($DataFile, $json, $Utf8NoBom)
+            Write-JsonAtomically -Path $DataFile -Json $json
             $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"ok":true}'); $type = "application/json; charset=utf-8"
           } catch { $status = "400 Bad Request"; $responseBytes = [System.Text.Encoding]::UTF8.GetBytes('{"error":"invalid JSON"}'); $type = "application/json; charset=utf-8" }
         }
@@ -193,8 +235,14 @@ try {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "index.html")); $type = "text/html; charset=utf-8"
       } elseif ($path -eq "/consultorio" -or $path -eq "/consultorio.html") {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "consultorio.html")); $type = "text/html; charset=utf-8"
-      } elseif ($path -eq "/logo-favmed.png" -and (Test-Path (Join-Path $Root "logo-favmed.png"))) {
-        $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "logo-favmed.png")); $type = "image/png"
+      } elseif ($path -eq "/prontuario" -or $path -eq "/prontuario.html") {
+        $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "prontuario.html")); $type = "text/html; charset=utf-8"
+      } elseif ($path -eq "/agenda" -or $path -eq "/agenda.html") {
+        $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "agenda.html")); $type = "text/html; charset=utf-8"
+      } elseif ($path -eq "/financeiro" -or $path -eq "/financeiro.html") {
+        $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "financeiro.html")); $type = "text/html; charset=utf-8"
+      } elseif ($path -eq "/logo-odontologia.svg" -and (Test-Path (Join-Path $Root "logo-odontologia.svg"))) {
+        $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "logo-odontologia.svg")); $type = "image/svg+xml; charset=utf-8"
       } elseif ($path -eq "/chamador.mp3" -and (Test-Path (Join-Path $Root "chamador.mp3"))) {
         $responseBytes = [System.IO.File]::ReadAllBytes((Join-Path $Root "chamador.mp3")); $type = "audio/mpeg"
       } elseif ($path -eq "/sala-espera") {
