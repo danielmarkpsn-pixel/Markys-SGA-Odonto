@@ -58,9 +58,50 @@ body:not(.public-mode) .markys-sidebar{position:fixed;z-index:40;inset:0 auto 0 
 .markys-sidebar nav{display:flex;flex-direction:column;gap:6px}.markys-sidebar nav a{display:flex;align-items:center;gap:12px;padding:11px 12px;color:#e4f5eb;text-decoration:none;border-radius:9px;font-size:12px;font-weight:650}.markys-sidebar nav a:hover,.markys-sidebar nav a.active{background:linear-gradient(100deg,#0ba66a,#078954);color:#fff}
 .markys-sidebar-foot{display:flex;align-items:center;gap:9px;margin-top:auto;border-top:1px solid #ffffff30;padding:16px 8px 4px;color:#c7e6d6;font-size:10px;line-height:1.5}.markys-sidebar-foot i{width:9px;height:9px;background:#2fc878;border-radius:50%;box-shadow:0 0 0 4px #2fc87820}
 @media(max-width:760px){body:not(.public-mode) header{position:relative;inset:auto;width:auto;height:auto;min-height:0;padding:12px 14px;border-radius:0;flex-direction:row;align-items:center;gap:10px}body:not(.public-mode) header .brand{display:flex}body:not(.public-mode) header nav{flex-direction:row;flex-wrap:wrap;margin:0}body:not(.public-mode) header nav a{flex:1 1 auto;justify-content:center;padding:8px}body:not(.public-mode) main{margin-left:0;padding:18px 12px 28px}body:not(.public-mode) .markys-sidebar{display:none}}
-\nbody:not(.public-mode) header .brand{display:none}body:not(.public-mode) header{position:relative;left:auto;top:auto;bottom:auto;width:auto;height:auto;min-height:0;margin-left:228px;padding:15px 30px;background:#ffffffed;color:#123f2f;border-bottom:1px solid #dcebe2;box-shadow:none;flex-direction:row;align-items:center;justify-content:flex-end}body:not(.public-mode) header .datebox{margin:0;padding:0;border:0;color:#668373;text-align:right}body:not(.public-mode) main{margin-left:228px}body.public-mode .markys-sidebar{display:none!important}body.public-mode header{position:relative;inset:auto;width:auto;height:auto;min-height:0;margin:0;padding:24px clamp(16px,4vw,42px);background:#ffffffd9;color:var(--text);border-bottom:1px solid var(--line);box-shadow:none;display:flex;flex-direction:row;align-items:center}body.public-mode header .brand{display:flex}body.public-mode main{margin:0 auto;max-width:1500px}\n</style>
+
+body:not(.public-mode) header .brand{display:none}body:not(.public-mode) header{position:relative;left:auto;top:auto;bottom:auto;width:auto;height:auto;min-height:0;margin-left:228px;padding:15px 30px;background:#ffffffed;color:#123f2f;border-bottom:1px solid #dcebe2;box-shadow:none;flex-direction:row;align-items:center;justify-content:flex-end}body:not(.public-mode) header .datebox{margin:0;padding:0;border:0;color:#668373;text-align:right}body:not(.public-mode) main{margin-left:228px}body.public-mode .markys-sidebar{display:none!important}body.public-mode header{position:relative;inset:auto;width:auto;height:auto;min-height:0;margin:0;padding:24px clamp(16px,4vw,42px);background:#ffffffd9;color:var(--text);border-bottom:1px solid var(--line);box-shadow:none;display:flex;flex-direction:row;align-items:center}body.public-mode header .brand{display:flex}body.public-mode main{margin:0 auto;max-width:1500px}
+
+/* Recepção alinhada ao padrão visual de referência */
+body:not(.public-mode){min-height:100vh;background:linear-gradient(135deg,#f1f8f3 0%,#f8fcf9 60%,#eaf6ee 100%);color:#123f2f}
+body:not(.public-mode) .markys-sidebar{position:fixed;z-index:50;inset:0 auto 0 0;width:228px;padding:20px 14px;background:linear-gradient(165deg,#00563b,#00432f 62%,#003b2b);color:#fff;display:flex;flex-direction:column;gap:22px;box-shadow:8px 0 28px #003d2b16}
+.markys-sidebar{display:none}.markys-sidebrand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;color:#fff;text-decoration:none;border-bottom:1px solid #ffffff30}
+.markys-sidebrand img{width:42px;height:42px;object-fit:contain;filter:brightness(0) invert(1)}.markys-sidebrand strong,.markys-sidebrand small{display:block}.markys-sidebrand strong{font-size:18px;line-height:1.1}.markys-sidebrand small{font-size:11px;color:#c9e8d8;margin-top:3px}
+.markys-sidebar nav{display:flex;flex-direction:column;gap:6px}.markys-sidebar nav a{display:flex;align-items:center;gap:12px;padding:11px 12px;color:#e4f5eb;text-decoration:none;border-radius:9px;font-size:13px;font-weight:650}.markys-sidebar nav a:hover,.markys-sidebar nav a.active{background:linear-gradient(100deg,#0ba66a,#078954);color:#fff}
+.markys-sidebar-foot{display:flex;align-items:center;gap:9px;margin-top:auto;border-top:1px solid #ffffff30;padding:16px 8px 4px;color:#c7e6d6;font-size:11px;line-height:1.5}.markys-sidebar-foot i{width:9px;height:9px;background:#2fc878;border-radius:50%;box-shadow:0 0 0 4px #2fc87820;flex:none}
+body:not(.public-mode)>header{position:relative;margin-left:228px;padding:16px 30px;background:#ffffffed;border:0;border-bottom:1px solid #dcebe2;border-radius:0;box-shadow:0 3px 18px #164a3208;justify-content:flex-end;min-height:68px}
+body:not(.public-mode)>header .brand{display:none}
+body:not(.public-mode)>header .datebox{color:#567564;text-align:right;margin:0;padding:0;border:0}
+body:not(.public-mode)>main{margin-left:228px;max-width:none;width:auto;padding:30px clamp(18px,3vw,42px) 42px}
+body:not(.public-mode) .hero{align-items:center;padding:6px 0 18px;border-bottom:1px solid #dcebe2}
+body:not(.public-mode) .hero h2{color:#104c35;letter-spacing:-.6px}
+body:not(.public-mode) .hero-actions{display:flex;gap:8px;flex-wrap:wrap}
+body:not(.public-mode) .hero-actions .btn{border-radius:9px}
+body:not(.public-mode) .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+body:not(.public-mode) .stat{padding:19px 21px;border:1px solid #dcebe2;border-radius:14px;background:#fff;box-shadow:0 8px 26px #164a3210}
+body:not(.public-mode) .stat span{color:#688273;font-weight:650}
+body:not(.public-mode) .stat strong{font-size:32px;color:#0b7146}
+body:not(.public-mode) .layout{grid-template-columns:minmax(300px,.85fr) minmax(0,1.4fr);gap:18px}
+body:not(.public-mode) .panel{padding:20px;border:1px solid #dcebe2;border-radius:14px;background:#fff;box-shadow:0 8px 26px #164a3210}
+body:not(.public-mode) .panel h3{color:#104c35}
+body:not(.public-mode) .form-module{border-color:#dcebe2;border-radius:10px}
+body:not(.public-mode) .form-module>summary{background:#eff8f2;color:#087849}
+body:not(.public-mode) .patient{background:#fbfefc;border-color:#e0eee5}
+body:not(.public-mode) .patient.called{background:#edf9f1;border-color:#85cda4}
+body:not(.public-mode) .number{background:#e7f5eb;color:#087849}
+body:not(.public-mode) .pactions .btn.primary,body:not(.public-mode) .btn.primary{background:linear-gradient(100deg,#078b53,#06a365);color:#fff}
+body:not(.public-mode) .btn.secondary{background:#eff8f2;color:#15523a;border:1px solid #d9e9df}
+body:not(.public-mode) .search,body:not(.public-mode) .field input,body:not(.public-mode) .field select{border-color:#d5e6dc;border-radius:8px}
+body:not(.public-mode) .localtag{background:#eaf8ee;border-color:#b9e2c6;color:#07643f}
+body.public-mode .markys-sidebar{display:none!important}
+@media(max-width:760px){body:not(.public-mode) .markys-sidebar{display:none}body:not(.public-mode)>header{margin-left:0;padding:12px 16px}body:not(.public-mode)>main{margin-left:0;padding:18px 12px 28px}body:not(.public-mode) .hero-actions{width:100%}body:not(.public-mode) .hero-actions .btn{flex:1 1 140px}body:not(.public-mode) .layout{grid-template-columns:minmax(0,1fr)}}
+
+</style>
 </head>
 <body>
+<aside class="markys-sidebar" aria-label="Navegação principal">
+<a class="markys-sidebrand" href="/" aria-label="Markys SGA Odonto"><img src="logo-odontologia.svg" alt=""><span><strong>Markys</strong><small>SGA Odonto</small></span></a>
+<nav><a href="/" data-route="/">⌂ <span>Início / Recepção</span></a><a href="/consultorio" data-route="/consultorio">♙ <span>Consultório</span></a><a href="/prontuario" data-route="/prontuario">♧ <span>Prontuário</span></a><a href="/agenda" data-route="/agenda">▦ <span>Agenda</span></a><a href="/financeiro" data-route="/financeiro">＄ <span>Financeiro</span></a></nav>
+<div class="markys-sidebar-foot"><i></i><span>Servidor local<br>Markys SGA Odonto</span></div></aside>
 <header>
  <div class="brand"><img class="brand-logo" src="logo-odontologia.svg" alt="Logotipo da Markys SGA Odonto"><div><h1>Markys SGA Odonto</h1><p>Clínica odontológica · Gestão de atendimentos</p></div></div>
  <div class="datebox" id="today"></div>
@@ -219,7 +260,8 @@ async function resolveM3uPlaylist(url){
  const response=await fetch(url,{cache:"no-store"});
  if(!response.ok)throw new Error("A lista respondeu HTTP "+response.status);
  const text=await response.text();
- const entries=text.split(/\r?\n/).map(line=>line.trim()).filter(line=>line&&!line.startsWith("#"));
+ const entries=text.split(/\r?
+/).map(line=>line.trim()).filter(line=>line&&!line.startsWith("#"));
  if(!entries.length)throw new Error("A lista M3U não contém endereços de mídia reconhecíveis.");
  const resolved=entries.map(entry=>absolutePlaylistEntry(entry,url)).filter(Boolean);
  const hls=resolved.find(isHlsUrl);
@@ -426,7 +468,8 @@ case"priority":p.priority=!p.priority;save();render();break;
 case"remove":if(confirm("Remover "+p.name+" da fila?")){patients=patients.filter(x=>String(x.id)!==String(p.id));save();render();}break;
 }});
 $("clearAttended").addEventListener("click",()=>{const n=patients.filter(p=>p.day===todayKey&&p.status==="Atendido").length;if(!n){notify("Não há atendidos para limpar.");return;}if(confirm("Remover "+n+" paciente(s) atendido(s) da lista de hoje?")){patients=patients.filter(p=>!(p.day===todayKey&&p.status==="Atendido"));save();render();}});
-$("exportCsv").addEventListener("click",()=>{const rows=[["Nome","Sala(s)","Atendimento(s)","Status","Data","Hora de chegada","Saída","Prioridade"],...patients.filter(p=>p.day===todayKey).map(p=>[p.name,roomsText(p),servicesText(p),p.status,p.day,p.time,p.exitTime||"",p.priority?"Sim":"Não"])];const csv="\ufeff"+rows.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\r\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="favmed-fila-"+todayKey+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+$("exportCsv").addEventListener("click",()=>{const rows=[["Nome","Sala(s)","Atendimento(s)","Status","Data","Hora de chegada","Saída","Prioridade"],...patients.filter(p=>p.day===todayKey).map(p=>[p.name,roomsText(p),servicesText(p),p.status,p.day,p.time,p.exitTime||"",p.priority?"Sim":"Não"])];const csv="\ufeff"+rows.map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\r
+");const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="favmed-fila-"+todayKey+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 $("backupJson").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(patients,null,2)],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="favmed-backup-"+todayKey+".json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 $("exportPdf").addEventListener("click",()=>{const rows=patients.filter(p=>p.day===todayKey).sort((a,b)=>(Number(!!b.priority)-Number(!!a.priority))||(a.created||0)-(b.created||0));const w=window.open("","_blank");if(!w){notify("Permita pop-ups para gerar o PDF.");return;}const safe=s=>String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));const body=rows.map((p,i)=>"<tr><td>"+(i+1)+"</td><td>"+safe(p.name)+(p.priority?" (PRIORIDADE)":"")+"</td><td>"+safe(servicesText(p))+"</td><td>"+safe(roomsText(p))+"</td><td>"+safe(p.status)+"</td><td>"+safe(p.time||"")+"</td><td>"+safe(p.exitTime||"—")+"</td></tr>").join("");const html="<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><title>FAVMED - Relatório da fila</title><style>@page{size:A4 portrait;margin:12mm}*{box-sizing:border-box}body{font:11px Arial,sans-serif;color:#20313a}h1{font-size:20px;margin:0 0 5px}p{margin:0 0 15px;color:#637984}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #bfcbd1;padding:6px 5px;text-align:left;overflow-wrap:anywhere}th{background:#e8f7ed}tr{break-inside:avoid}</style></head><body><h1>Markys SGA Odonto — Fila de atendimento</h1><p>Relatório · "+todayKey.split("-").reverse().join("/")+" · Emitido em "+new Date().toLocaleString("pt-BR")+"</p><table><thead><tr><th>Posição</th><th>Paciente</th><th>Atendimento(s)</th><th>Sala</th><th>Status</th><th>Entrada</th><th>Saída</th></tr></thead><tbody>"+(body||"<tr><td colspan=\"7\">Nenhum registro hoje.</td></tr>")+"</tbody></table></body></html>";w.document.write(html);w.document.close();setTimeout(()=>w.print(),300);});
 function xlsxEscape(value){return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;");}
