@@ -49,13 +49,32 @@ body:not(.public-mode) .markys-sidebar{position:fixed;z-index:40;inset:0 auto 0 
 .markys-sidebar nav{display:flex;flex-direction:column;gap:6px}.markys-sidebar nav a{display:flex;align-items:center;gap:12px;padding:11px 12px;color:#e4f5eb;text-decoration:none;border-radius:9px;font-size:12px;font-weight:650}.markys-sidebar nav a:hover,.markys-sidebar nav a.active{background:linear-gradient(100deg,#0ba66a,#078954);color:#fff}
 .markys-sidebar-foot{display:flex;align-items:center;gap:9px;margin-top:auto;border-top:1px solid #ffffff30;padding:16px 8px 4px;color:#c7e6d6;font-size:10px;line-height:1.5}.markys-sidebar-foot i{width:9px;height:9px;background:#2fc878;border-radius:50%;box-shadow:0 0 0 4px #2fc87820}
 @media(max-width:760px){body:not(.public-mode) header{position:relative;inset:auto;width:auto;height:auto;min-height:0;padding:12px 14px;border-radius:0;flex-direction:row;align-items:center;gap:10px}body:not(.public-mode) header .brand{display:flex}body:not(.public-mode) header nav{flex-direction:row;flex-wrap:wrap;margin:0}body:not(.public-mode) header nav a{flex:1 1 auto;justify-content:center;padding:8px}body:not(.public-mode) main{margin-left:0;padding:18px 12px 28px}body:not(.public-mode) .markys-sidebar{display:none}}
-\n</style>
+\n
+/* Navegação lateral única em todos os módulos Markys */
+.markys-sidebar{display:flex!important;position:fixed;z-index:100;inset:0 auto 0 0;width:228px;padding:20px 14px;background:linear-gradient(165deg,#00563b,#00432f 62%,#003b2b);color:#fff;flex-direction:column;gap:22px;box-shadow:8px 0 28px #003d2b16}
+.markys-sidebrand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px;color:#fff;text-decoration:none;border-bottom:1px solid #ffffff30}
+.markys-sidebrand img{width:39px;height:39px;object-fit:contain;filter:brightness(0) invert(1)}
+.markys-sidebrand strong,.markys-sidebrand small{display:block}.markys-sidebrand strong{font-size:17px;line-height:1.1}.markys-sidebrand small{font-size:10px;color:#c9e8d8;margin-top:3px}
+.markys-sidebar nav{display:flex;flex-direction:column;gap:6px}.markys-sidebar nav a{display:flex;align-items:center;gap:12px;padding:11px 12px;color:#e4f5eb;text-decoration:none;border-radius:9px;font-size:13px;font-weight:650}.markys-sidebar nav a:hover,.markys-sidebar nav a.active{background:linear-gradient(100deg,#0ba66a,#078954);color:#fff}
+.markys-sidebar-foot{display:flex;align-items:center;gap:9px;margin-top:auto;border-top:1px solid #ffffff30;padding:16px 8px 4px;color:#c7e6d6;font-size:11px;line-height:1.5}.markys-sidebar-foot i{width:9px;height:9px;background:#2fc878;border-radius:50%;box-shadow:0 0 0 4px #2fc87820;flex:none}
+body:not(.public-mode)>header{margin-left:228px;padding:15px 30px;min-height:60px;justify-content:flex-end}body:not(.public-mode)>main{margin-left:228px}
+.markys-sidebar nav a.active{background:linear-gradient(100deg,#0ba66a,#078954);color:#fff}
+@media(max-width:760px){body:not(.public-mode) .markys-sidebar{position:relative;inset:auto;width:100%;height:auto;min-height:0;padding:10px;gap:10px}.markys-sidebar nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.markys-sidebrand{padding-bottom:10px}body:not(.public-mode)>header,body:not(.public-mode)>main{margin-left:0!important}}
+</style>
 </head>
 <body>
-<header>
- <div class="brand"><img src="logo-odontologia.svg" alt="Markys SGA Odonto"><div><h1>Markys SGA Odonto</h1><p>Prontuário odontológico</p></div></div>
- <nav class="nav" aria-label="Navegação principal"><a href="/">Recepção</a><a href="/consultorio">Consultório</a><a class="active" href="/prontuario">Prontuário</a></nav>
-</header>
+<aside class="markys-sidebar" aria-label="Navegação principal">
+<a class="markys-sidebrand" href="/" aria-label="Markys SGA Odonto"><img src="logo-odontologia.svg" alt=""><span><strong>Markys</strong><small>SGA Odonto</small></span></a>
+<nav>
+<a href="/" data-route="/">⌂ <span>Início / Recepção</span></a>
+<a href="/consultorio" data-route="/consultorio">♙ <span>Consultório</span></a>
+<a href="/prontuario" data-route="/prontuario" class="active">♧ <span>Prontuário</span></a>
+<a href="/agenda" data-route="/agenda">▦ <span>Agenda</span></a>
+<a href="/financeiro" data-route="/financeiro">＄ <span>Financeiro</span></a>
+<a href="/sala" data-route="/sala">▣ <span>Sala de espera</span></a>
+</nav><div class="markys-sidebar-foot"><i></i><span>Servidor local<br>Markys SGA Odonto</span></div></aside>
+
+<header><div class="datebox" id="today"></div></header>
 <main>
  <section class="page-title"><div><div class="eyebrow">Área clínica</div><h2>Prontuário odontológico</h2><p>Anamnese estruturada, odontograma, evolução e plano de tratamento.</p></div><button class="btn secondary" id="refresh" type="button">↻ Atualizar pacientes</button></section>
  <div class="privacy"><strong>Proteção de dados:</strong> este módulo é uma implementação inicial. O sistema ainda não tem login, perfis de acesso, auditoria clínica ou criptografia. Use somente pacientes fictícios até esses controles serem implantados e testados.</div>
@@ -165,5 +184,6 @@ window.addEventListener("beforeunload",e=>{if(dirty){e.preventDefault();e.return
 loadPatients(false);
 })();
 </script>
+<script>(function(){var p=location.pathname.replace(/\/$/,"")||"/";document.querySelectorAll(".markys-sidebar nav a[data-route]").forEach(function(a){a.classList.toggle("active",a.getAttribute("data-route")===p);});})();</script>
 </body>
 </html>
